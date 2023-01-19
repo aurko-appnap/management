@@ -14,4 +14,9 @@ class Product extends Model implements HasMedia
     use InteractsWithMedia;
 
     protected $fillable = ['name' , 'category' , 'slug' , 'brand' , 'price', 'product_description' , 'display_picture'];
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
 }

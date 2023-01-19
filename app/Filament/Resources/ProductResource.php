@@ -21,9 +21,8 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
-
-
-
+use Filament\Forms\Components\Select;
+use Filament\Tables\Filters\SelectFilter;
 
 
 class ProductResource extends Resource
@@ -52,7 +51,8 @@ class ProductResource extends Resource
                     TextInput::make('category')
                         ->required(),
                     
-                    TextInput::make('brand')
+                    Select::make('brand_id')
+                        ->relationship('brand', 'name')
                         ->required(),
                     
                     RichEditor::make('product_description')
@@ -80,8 +80,8 @@ class ProductResource extends Resource
                 TextColumn::make('name'),
                 TextColumn::make('category'),
                 TextColumn::make('slug'),
-                TextColumn::make('brand'),
                 TextColumn::make('price'),
+                TextColumn::make('brand.name'),
                 SpatieMediaLibraryImageColumn::make('thumbnail')->collection('display_pictures'),
             ])
             ->filters([
