@@ -24,6 +24,7 @@ use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\Toggle;
+use Filament\Tables\Columns\ToggleColumn;
 
 class ProductResource extends Resource
 {
@@ -84,10 +85,10 @@ class ProductResource extends Resource
                 TextColumn::make('id')->sortable(),
                 TextColumn::make('name'),
                 TextColumn::make('category'),
-                TextColumn::make('slug'),
                 TextColumn::make('price')->sortable(),
                 TextColumn::make('brand.name'),
                 SpatieMediaLibraryImageColumn::make('thumbnail')->collection('display_pictures'),
+                ToggleColumn::make('is_available'),
             ])
             ->filters([
                 //
