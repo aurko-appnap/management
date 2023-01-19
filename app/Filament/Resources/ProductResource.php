@@ -23,7 +23,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Filters\SelectFilter;
-
+use Filament\Forms\Components\Toggle;
 
 class ProductResource extends Resource
 {
@@ -66,7 +66,12 @@ class ProductResource extends Resource
                 Card::make()->schema([
                     SpatieMediaLibraryFileUpload::make('thumbnail')
                         ->collection('display_pictures'),
-                ])
+                ]),
+                 
+                Toggle::make('is_available')->inline(true)
+                        ->default(1)
+                        ->onColor('success')
+                        ->offColor('danger'),
 
                 
             ]);
@@ -80,7 +85,7 @@ class ProductResource extends Resource
                 TextColumn::make('name'),
                 TextColumn::make('category'),
                 TextColumn::make('slug'),
-                TextColumn::make('price'),
+                TextColumn::make('price')->sortable(),
                 TextColumn::make('brand.name'),
                 SpatieMediaLibraryImageColumn::make('thumbnail')->collection('display_pictures'),
             ])
