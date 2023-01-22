@@ -2,18 +2,17 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class Brand extends Model implements HasMedia
+class Category extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia;
-    use SoftDeletes;
-
-    protected $fillable = ['name' , 'website' , 'vendor', 'status' , 'description', 'slug'];
+    use HasFactory, InteractsWithMedia, SoftDeletes;
+    
+    protected $fillable = ['name' , 'status' , 'description', 'slug'];
     protected $casts = [
         'status' => 'boolean',
     ];

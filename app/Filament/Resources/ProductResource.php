@@ -55,7 +55,8 @@ class ProductResource extends Resource
                 ->columns(2),
 
                 Card::make()->schema([
-                    TextInput::make('category')
+                    Select::make('category_id')
+                        ->relationship('category', 'name')
                         ->required(),
                     
                     Select::make('brand_id')
@@ -92,7 +93,7 @@ class ProductResource extends Resource
                 SpatieMediaLibraryImageColumn::make('thumbnail')->collection('display_pictures')
                 ->label('Picture'),
                 TextColumn::make('name'),
-                TextColumn::make('category'),
+                TextColumn::make('category.name'),
                 TextColumn::make('price')->sortable(),
                 TextColumn::make('brand.name'),
                 BadgeColumn::make('is_available')
@@ -122,6 +123,14 @@ class ProductResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
                 Tables\Actions\ForceDeleteBulkAction::make(),
                 Tables\Actions\RestoreBulkAction::make(),
+            ]);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
             ]);
     }
     
