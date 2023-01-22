@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+
 use App\Filament\Resources\ProductResource\Pages;
 use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
@@ -26,6 +27,8 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\BadgeColumn;
+use App\Enums\ProductStatus;
+
 
 
 
@@ -95,14 +98,15 @@ class ProductResource extends Resource
                 BadgeColumn::make('is_available')
                     ->label('Availability')
                     ->sortable()
-                    ->enum([
-                        '1' => 'Available',
-                        '0' => 'Not Available',
-                    ])
-                    ->colors([
-                        'warning' => '0',
-                        'success' => '1',
-                    ])
+                    ->enum(collect(ProductStatus::cases())
+                        ->mapWithKeys(fn($item) => [$item->value => $item->name()])
+                        ->toArray())
+                    ->color(function ($state) {
+                        $options = collect(ProductStatus::cases())
+                            ->mapWithKeys(fn($item) => [$item->value => $item->color()])
+                            ->toArray();
+                        return isset($options[$state]) ? $options[$state] : '';
+                    })
             ])
             ->filters([
                 //
