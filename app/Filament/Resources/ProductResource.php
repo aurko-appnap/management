@@ -24,7 +24,10 @@ use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\Toggle;
-use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\BadgeColumn;
+
+
 
 class ProductResource extends Resource
 {
@@ -83,12 +86,23 @@ class ProductResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')->sortable(),
+                SpatieMediaLibraryImageColumn::make('thumbnail')->collection('display_pictures')
+                ->label('Picture'),
                 TextColumn::make('name'),
                 TextColumn::make('category'),
                 TextColumn::make('price')->sortable(),
                 TextColumn::make('brand.name'),
-                SpatieMediaLibraryImageColumn::make('thumbnail')->collection('display_pictures'),
-                ToggleColumn::make('is_available'),
+                BadgeColumn::make('is_available')
+                    ->label('Availability')
+                    ->sortable()
+                    ->enum([
+                        '1' => 'Available',
+                        '0' => 'Not Available',
+                    ])
+                    ->colors([
+                        'warning' => '0',
+                        'success' => '1',
+                    ])
             ])
             ->filters([
                 //
