@@ -2,21 +2,27 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\BrandResource\Pages;
-use App\Filament\Resources\BrandResource\RelationManagers;
-use App\Models\Brand;
+use Closure;
 use Filament\Forms;
-use Filament\Resources\Form;
-use Filament\Resources\Resource;
-use Filament\Resources\Table;
 use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Models\Brand;
+use App\Enums\BrandStatus;
+use Illuminate\Support\Str;
+use Filament\Resources\Form;
+use Filament\Resources\Table;
+use Filament\Resources\Resource;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
-use Closure;
-use Illuminate\Support\Str;
+use Filament\Tables\Columns\BadgeColumn;
+use Filament\Forms\Components\RichEditor;
+use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\BrandResource\Pages;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\BrandResource\RelationManagers;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+
 
 class BrandResource extends Resource
 {
@@ -34,14 +40,32 @@ class BrandResource extends Resource
                     TextInput::make('name')
                         ->label('Brand Name')
                         ->required()
-                        ->unique(ignoreRecord: true),
+                        ->unique(ignoreRecord: true)
+                        ->reactive()
+                        ->afterStateUpdated(function (Closure $set, $state) {
+                            $set('slug', Str::slug($state));
+                        }),
+                        TextInput::make('slug'),
+                ])->columns(2),
 
+                Card::make()->schema([
+                    SpatieMediaLibraryFileUpload::make('thumbnail')
+                        ->collection('brand_picture'),
+                ]),
+                    
+                Card::make()->schema([
                     TextInput::make('website')
                         ->label('Company Website')
                         ->required(),
 
-                    TextInput::make('vendor')
-                        ->label('Vendor'),
+                    RichEditor::make('description')
+                        ->label('Company Description')
+                        ->required(),
+
+                    Toggle::make('status')->inline(true)
+                        ->default(1)
+                        ->onColor('success')
+                        ->offColor('danger'),
                 ]),
             ]);
     }
@@ -53,19 +77,44 @@ class BrandResource extends Resource
                 TextColumn::make('id')->sortable(),
                 TextColumn::make('name'),
                 TextColumn::make('website'),
-                TextColumn::make('vendor'),
+                BadgeColumn::make('status')
+                    ->label('Activity')
+                    ->sortable()
+                    ->enum(collect(BrandStatus::cases())
+                        ->mapWithKeys(fn($item) => [$item->value => $item->name()])
+                        ->toArray())
+                    ->color(function ($state) {
+                        $options = collect(BrandStatus::cases())
+                            ->mapWithKeys(fn($item) => [$item->value => $item->color()])
+                            ->toArray();
+                        return isset($options[$state]) ? $options[$state] : '';
+                    })
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ForceDeleteAction::make(),
+                Tables\Actions\RestoreAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\ForceDeleteBulkAction::make(),
+                Tables\Actions\RestoreBulkAction::make(),
             ]);
     }
     
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
+    }
+
     public static function getRelations(): array
     {
         return [

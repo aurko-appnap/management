@@ -18,11 +18,11 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('category')->nullable();
             $table->string('slug')->nullable();
-            $table->foreignId('brand_id')->constanted()->onDelete('cascade');
+            $table->foreignId('brand_id')->constanted()->onDelete('cascade')->nullable();
             $table->text('product_description')->nullable();
             $table->string('price')->nullable();
-            $table->string('created_at');
-            $table->string('updated_at');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

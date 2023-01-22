@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('website')->nullable();
             $table->string('vendor')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
