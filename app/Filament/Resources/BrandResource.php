@@ -13,6 +13,7 @@ use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Card;
+use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
@@ -25,7 +26,7 @@ use App\Filament\Resources\BrandResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\BrandResource\RelationManagers;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-
+use Filament\Pages\Actions\ViewAction;
 
 class BrandResource extends Resource
 {
@@ -94,9 +95,10 @@ class BrandResource extends Resource
                     })
             ])
             ->filters([
-                //
+               //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 DeleteAction::make()
                 ->before(function (Brand $record, DeleteAction $action)
@@ -121,14 +123,15 @@ class BrandResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
                 Tables\Actions\ForceDeleteBulkAction::make(),
                 Tables\Actions\RestoreBulkAction::make(),
-            ]);
+            ])->defaultSort('id' , 'desc');
+            
     }
     
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
-                SoftDeletingScope::class,
+                // SoftDeletingScope::class,
             ]);
     }
 

@@ -91,7 +91,7 @@ class CategoryResource extends Resource
                             ->toArray();
                         return isset($options[$state]) ? $options[$state] : '';
                     })
-                ])
+                ])->defaultSort('id' , 'desc')
             ->filters([
                 //
             ])
@@ -128,7 +128,7 @@ class CategoryResource extends Resource
     {
         return parent::getEloquentQuery()
             ->withoutGlobalScopes([
-                SoftDeletingScope::class,
+                // SoftDeletingScope::class,
             ]);
     }
     
