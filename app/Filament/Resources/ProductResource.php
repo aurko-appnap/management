@@ -3,34 +3,33 @@
 namespace App\Filament\Resources;
 
 
-use App\Filament\Resources\ProductResource\Pages;
-use App\Filament\Resources\ProductResource\RelationManagers;
-use App\Models\Product;
-use Filament\Forms;
-use Filament\Resources\Form;
-use Filament\Resources\Resource;
-use Filament\Resources\Table;
-use Filament\Tables;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\TextInput;
 use Closure;
+use Filament\Forms;
+use Filament\Tables;
+use App\Models\Brand;
+use App\Models\Product;
 use Illuminate\Support\Str;
+use App\Enums\ProductStatus;
+use Filament\Resources\Form;
+use Filament\Resources\Table;
+use Filament\Resources\Resource;
 use Filament\Forms\Components\Card;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ImageColumn;
-use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Forms\Components\Select;
-use Filament\Tables\Filters\SelectFilter;
 use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\IconColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\BadgeColumn;
-use App\Enums\ProductStatus;
-
-
-
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Forms\Components\RichEditor;
+use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\ProductResource\Pages;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
+use App\Filament\Resources\ProductResource\RelationManagers;
+use App\Models\Category;
 
 class ProductResource extends Resource
 {
@@ -56,11 +55,11 @@ class ProductResource extends Resource
 
                 Card::make()->schema([
                     Select::make('category_id')
-                        ->relationship('category', 'name')
+                        ->relationship('category', 'name', fn (Builder $query) => Category::where('deleted_at' , NULL))
                         ->required(),
                     
                     Select::make('brand_id')
-                        ->relationship('brand', 'name')
+                        ->relationship('brand', 'name', fn (Builder $query) => Brand::where('deleted_at' , NULL))
                         ->required(),
                     
                     RichEditor::make('product_description')
