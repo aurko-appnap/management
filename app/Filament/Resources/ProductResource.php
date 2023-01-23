@@ -91,12 +91,12 @@ class ProductResource extends Resource
                 TextColumn::make('id')->sortable(),
                 SpatieMediaLibraryImageColumn::make('thumbnail')->collection('display_pictures')
                 ->label('Picture'),
-                TextColumn::make('name'),
-                TextColumn::make('category.name'),
+                TextColumn::make('name')->searchable(),
+                TextColumn::make('category.name')->searchable(),
                 TextColumn::make('price')
                     ->sortable()
                     ->money('BDT'),
-                TextColumn::make('brand.name'),
+                TextColumn::make('brand.name')->searchable(),
                 BadgeColumn::make('is_available')
                     ->label('Availability')
                     ->sortable()
