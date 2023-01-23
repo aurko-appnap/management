@@ -94,7 +94,9 @@ class ProductResource extends Resource
                 ->label('Picture'),
                 TextColumn::make('name'),
                 TextColumn::make('category.name'),
-                TextColumn::make('price')->sortable(),
+                TextColumn::make('price')
+                    ->sortable()
+                    ->money('BDT'),
                 TextColumn::make('brand.name'),
                 BadgeColumn::make('is_available')
                     ->label('Availability')

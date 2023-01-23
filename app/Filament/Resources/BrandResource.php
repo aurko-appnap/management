@@ -6,6 +6,7 @@ use Closure;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Brand;
+use App\Models\Product;
 use App\Enums\BrandStatus;
 use Illuminate\Support\Str;
 use Filament\Resources\Form;
@@ -15,8 +16,10 @@ use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Forms\Components\RichEditor;
+use Filament\Tables\Actions\DeleteAction;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\BrandResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -95,7 +98,21 @@ class BrandResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                DeleteAction::make()
+                ->before(function (Brand $record, DeleteAction $action)
+                {
+                    $temp = Product::where('brand_id' , $record->id)->count();
+                    if($temp != 0)
+                        {
+                            Notification::make()
+                                ->warning()
+                                ->title('Sorry!')
+                                ->body('This brand isn\'t empty!')
+                                ->send();
+                
+                            $action->cancel();
+                        }
+                }),
                 Tables\Actions\ForceDeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),
             ])

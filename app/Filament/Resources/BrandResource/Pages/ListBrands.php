@@ -9,7 +9,16 @@ use Filament\Resources\Pages\ListRecords;
 class ListBrands extends ListRecords
 {
     protected static string $resource = BrandResource::class;
-
+    
+    protected function getDefaultTableSortColumn(): ?string
+    {
+        return 'id';
+    }
+ 
+    protected function getDefaultTableSortDirection(): ?string
+    {
+        return 'desc';
+    }
     protected function getActions(): array
     {
         return [

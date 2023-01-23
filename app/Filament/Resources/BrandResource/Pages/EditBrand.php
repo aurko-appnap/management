@@ -21,7 +21,6 @@ class EditBrand extends EditRecord
             DeleteAction::make()
                 ->before(function (Brand $record, DeleteAction $action)
                 {
-                    // dd($record);
                     $temp = Product::where('brand_id' , $record->id)->count();
                     if($temp != 0)
                         {

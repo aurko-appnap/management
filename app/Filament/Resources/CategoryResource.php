@@ -5,24 +5,27 @@ namespace App\Filament\Resources;
 use Closure;
 use Filament\Forms;
 use Filament\Tables;
+use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Filament\Resources\Form;
+use App\Enums\CategoryStatus;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Forms\Components\RichEditor;
+use Filament\Tables\Actions\DeleteAction;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\CategoryResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use App\Filament\Resources\CategoryResource\RelationManagers;
-use App\Enums\CategoryStatus;
 
 class CategoryResource extends Resource
 {
@@ -94,7 +97,22 @@ class CategoryResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                DeleteAction::make()
+                    ->before(function (Category $record, DeleteAction $action)
+                    {
+                        // dd($record);
+                        $temp = Product::where('category_id' , $record->id)->count();
+                        if($temp != 0)
+                            {
+                                Notification::make()
+                                    ->warning()
+                                    ->title('Sorry!')
+                                    ->body('This category isn\'t empty!')
+                                    ->send();
+                    
+                                $action->cancel();
+                            }
+                    }),
                 Tables\Actions\ForceDeleteAction::make(),
                 Tables\Actions\RestoreAction::make(),
             ])
