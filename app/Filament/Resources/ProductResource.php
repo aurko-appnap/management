@@ -8,9 +8,12 @@ use Filament\Forms;
 use Filament\Tables;
 use App\Models\Brand;
 use App\Models\Product;
+use App\Models\Category;
+use Akaunting\Money\Money;
 use Illuminate\Support\Str;
 use App\Enums\ProductStatus;
 use Filament\Resources\Form;
+use Akaunting\Money\Currency;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Card;
@@ -24,12 +27,13 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\RichEditor;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\TextInput\Mask;
 use App\Filament\Resources\ProductResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use App\Filament\Resources\ProductResource\RelationManagers;
-use App\Models\Category;
+use Illuminate\Contracts\Pipeline\Pipeline;
 
 class ProductResource extends Resource
 {
@@ -43,15 +47,14 @@ class ProductResource extends Resource
             ->schema([
                 Card::make()->schema([
                     TextInput::make('name')
-                    ->label('Product Name')
-                    ->required()
-                    ->reactive()
-                    ->afterStateUpdated(function (Closure $set, $state) {
-                        $set('slug', Str::slug($state));
-                    }),
-                TextInput::make('slug'),
-                ])
-                ->columns(2),
+                        ->label('Product Name')
+                        ->required()
+                        ->reactive()
+                        ->afterStateUpdated(function (Closure $set, $state) {
+                            $set('slug', Str::slug($state));
+                        }),
+                    TextInput::make('slug'),
+                        ])->columns(2),
 
                 Card::make()->schema([
                     Select::make('category_id')
@@ -66,8 +69,21 @@ class ProductResource extends Resource
                         ->required(),
 
                     TextInput::make('price')
+                        ->prefix('৳ ')
                         ->mask(fn (TextInput\Mask $mask) => $mask
-                        ->money(prefix: '৳ ', decimalPlaces: 2)),
+                            // ->money(prefix: '$ ')
+                            ->numeric()
+                            ->thousandsSeparator(',')
+                            ->mapToDecimalSeparator(['.'])
+                        ),
+
+                        // ->numeric()
+                        // ->mask(fn (TextInput\Mask $mask) => $mask
+                        //     ->numeric()
+                        //     ->thousandsSeparator(',')
+                        //     ->mapToDecimalSeparator(['.'])
+                        //     ->decimalPlaces(2), 
+                        // )
                 ]),
 
                 Card::make()->schema([
@@ -98,9 +114,8 @@ class ProductResource extends Resource
                 TextColumn::make('category.name')->searchable(),
                 
                 TextColumn::make('price')
-                    ->formatStateUsing(fn (string $state): 
-                        string => __("৳ {$state}.00")
-                    ),
+                    ->money('BDT'),
+
                 
                 TextColumn::make('brand.name')->searchable(),
                 
