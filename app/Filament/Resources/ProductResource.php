@@ -55,11 +55,11 @@ class ProductResource extends Resource
 
                 Card::make()->schema([
                     Select::make('category_id')
-                        ->relationship('category', 'name', fn (Builder $query) => Category::where('deleted_at' , NULL))
+                        ->relationship('category', 'name', fn (Builder $query) => Category::where('status' , '1'))
                         ->required(),
                     
                     Select::make('brand_id')
-                        ->relationship('brand', 'name', fn (Builder $query) => Brand::where('deleted_at' , NULL))
+                        ->relationship('brand', 'name', fn (Builder $query) => Brand::where('status' , '1'))
                         ->required(),
                     
                     RichEditor::make('product_description')
@@ -67,7 +67,7 @@ class ProductResource extends Resource
 
                     TextInput::make('price')
                         ->mask(fn (TextInput\Mask $mask) => $mask
-                        ->money(prefix: 'BDT ', thousandsSeparator: ',', decimalPlaces: 2)),
+                        ->money(prefix: '৳ ', decimalPlaces: 2)),
                 ]),
 
                 Card::make()->schema([
@@ -89,14 +89,21 @@ class ProductResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')->sortable(),
+                
                 SpatieMediaLibraryImageColumn::make('thumbnail')->collection('display_pictures')
                 ->label('Picture'),
+                
                 TextColumn::make('name')->searchable(),
+                
                 TextColumn::make('category.name')->searchable(),
+                
                 TextColumn::make('price')
-                    ->sortable()
-                    ->money('BDT'),
+                    ->formatStateUsing(fn (string $state): 
+                        string => __("৳ {$state}.00")
+                    ),
+                
                 TextColumn::make('brand.name')->searchable(),
+                
                 BadgeColumn::make('is_available')
                     ->label('Availability')
                     ->sortable()
