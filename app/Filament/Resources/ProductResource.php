@@ -46,15 +46,21 @@ class ProductResource extends Resource
         return $form
             ->schema([
                 Card::make()->schema([
-                    TextInput::make('name')
-                        ->label('Product Name')
-                        ->required()
-                        ->reactive()
-                        ->afterStateUpdated(function (Closure $set, $state) {
-                            $set('slug', Str::slug($state));
-                        }),
-                    TextInput::make('slug'),
-                        ])->columns(2),
+                    Card::make()->schema([
+                        TextInput::make('name')
+                            ->label('Product Name')
+                            ->required()
+                            ->reactive()
+                            ->afterStateUpdated(function (Closure $set, $state) {
+                                $set('slug', Str::slug($state));
+                            }),
+                        TextInput::make('slug'),
+                            ])->columns(2),
+                        
+                    RichEditor::make('product_description')
+                        ->required(),
+                ]),
+                
 
                 Card::make()->schema([
                     Select::make('category_id')
@@ -63,9 +69,6 @@ class ProductResource extends Resource
                     
                     Select::make('brand_id')
                         ->relationship('brand', 'name', fn (Builder $query) => Brand::where('status' , '1'))
-                        ->required(),
-                    
-                    RichEditor::make('product_description')
                         ->required(),
 
                     TextInput::make('price')
@@ -76,14 +79,6 @@ class ProductResource extends Resource
                             ->thousandsSeparator(',')
                             ->mapToDecimalSeparator(['.'])
                         ),
-
-                        // ->numeric()
-                        // ->mask(fn (TextInput\Mask $mask) => $mask
-                        //     ->numeric()
-                        //     ->thousandsSeparator(',')
-                        //     ->mapToDecimalSeparator(['.'])
-                        //     ->decimalPlaces(2), 
-                        // )
                 ]),
 
                 Card::make()->schema([
