@@ -12,6 +12,11 @@ class CreateOrder extends CreateRecord
 {
     protected static string $resource = OrderResource::class;
     
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
+    
     protected function handleRecordCreation(array $data): Model
     {
         $data['user_id'] = auth()->id();
@@ -19,7 +24,7 @@ class CreateOrder extends CreateRecord
         $items = $this->data['OrderItem'];
 
         foreach ($items as $key => $item)
-            $total_price = $total_price + $item['total_price_product'];
+            $total_price = $total_price + $item['total_price'];
         
         $data['total_price']=$total_price;
         $data['order_status']=0;

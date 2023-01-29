@@ -24,6 +24,7 @@ use Filament\Forms\Components\Placeholder;
 use App\Filament\Resources\OrderResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\OrderResource\RelationManagers;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 
 class OrderResource extends Resource
 {
@@ -69,44 +70,63 @@ class OrderResource extends Resource
                         ->schema([
                             Select::make('product_id')
                                 ->label('Product')
-                                ->options(Product::query()->pluck('name' , 'id'))
+                                ->options(function($state, callable $get){
+                                    $temp = [];
+                                    foreach($get('../../OrderItem') as $item)
+                                    {
+                                        if($item['product_id'] != $state && $item['product_id'] != NULL)
+                                        $temp[] = $item['product_id'];
+                                    }
+                                    
+                                    return Product::whereNotIn('id' , $temp)->pluck('name' , 'id');
+                                })
+                                
                                 ->reactive()
                                 ->afterStateUpdated(function($state , callable $set,  callable $get){
                                     $product = Product::find($state);
                                     if($product)
                                     {
-                                        $set('price' , $product->price);
                                         $set('product_price' , $product->price);
-                                        $set('total_price_product', $get('product_quantity')*$product->price);
+                                        $total_prices = $get('product_quantity')*$product->price;
+                                        $set('total_price', $total_prices);
+                                        // $set('product_picture' , $product->getMedia('display_pictures'));
                                     }
                                 })
                                 ->required(),
+                            
+                            // SpatieMediaLibraryImageColumn::make('thumbnail')->collection('product_picture'),
 
                             TextInput::make('product_quantity')
                                 ->label('Quantity')
                                 ->integer()
+                                ->default(1)
                                 ->minValue(1)
                                 ->required()
                                 ->reactive()
                                 ->afterStateUpdated(function($state , callable $set, callable $get){
-                                    $set('total_price_product', $get('price')*$state);
+                                    $set('total_price', $get('product_price')*$state);
                                 }),
                                         
                             
-                            TextInput::make('price')
+                            TextInput::make('product_price')
                                 ->label('Unit Price')
-                                ->prefix('৳ ')
+                                ->prefix('BDT')
                                 ->mask(fn (TextInput\Mask $mask) => $mask
                                     ->numeric()
                                     ->thousandsSeparator(',')
                                     ->mapToDecimalSeparator(['.'])
-                                )
-                                ->disabled()
-                                ->dehydrated(false),
+                            )
+                                ->disabled(),
 
-                            Hidden::make('product_price'),
-
-                            TextInput::make('total_price_product')
+                            TextInput::make('total_price')
+                                // ->mask(fn (TextInput\Mask $mask) => $mask
+                                //     ->numeric()
+                                //     ->thousandsSeparator(',')
+                                //     ->mapToDecimalSeparator(['.'])
+                                // )
+                                ->default(0)
+                                ->label('Total Price')
+                                ->prefix('BDT')
                                 ->disabled(),
                                 
                         ])
@@ -114,7 +134,6 @@ class OrderResource extends Resource
                         ->columns(4)
                         ->createItemButtonLabel('Add More Product')
                     ]),
-                    Hidden::make('total_price'),
                 
             ]);
     }
