@@ -71,6 +71,7 @@ class ProductResource extends Resource
                                 $set('slug', $final_slug);
                             }),
                         TextInput::make('slug')
+                            ->disabled()
                             ->unique(Product::class, 'slug', fn ($record) => $record),
                             
                             ])->columns(2),
