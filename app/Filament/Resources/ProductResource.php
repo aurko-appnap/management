@@ -52,9 +52,27 @@ class ProductResource extends Resource
                             ->required()
                             ->reactive()
                             ->afterStateUpdated(function (Closure $set, $state) {
-                                $set('slug', Str::slug($state));
+                                // $set('slug', Str::slug($state));
+
+                                $temp_slug = Str::slug($state);
+                                $final_slug = NULL;
+
+                                $check = Product::where('slug' , $temp_slug)->first();
+                                if(!$check)
+                                    $final_slug = $temp_slug;
+                                else
+                                    {
+                                        do{
+                                            $temp_slug = $temp_slug.random_int(0,9);
+                                        }while(Product::where('slug' , $temp_slug)->first());
+                                        
+                                        $final_slug = $temp_slug;
+                                    }
+                                $set('slug', $final_slug);
                             }),
-                        TextInput::make('slug'),
+                        TextInput::make('slug')
+                            ->unique(Product::class, 'slug', fn ($record) => $record),
+                            
                             ])->columns(2),
                         
                     RichEditor::make('product_description')
