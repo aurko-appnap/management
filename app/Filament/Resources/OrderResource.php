@@ -6,11 +6,14 @@ use Filament\Forms;
 use Filament\Tables;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\Customer;
 use App\Enums\OrderStatus;
+use App\Models\Transaction;
 use Filament\Resources\Form;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Card;
+use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Repeater;
@@ -31,7 +34,7 @@ class OrderResource extends Resource
     protected static ?string $model = Order::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-plus-circle';
-    protected static ?string $navigationGroup = 'Management';
+    protected static ?string $navigationGroup = 'Finance';
 
     public static function form(Form $form): Form
     {
@@ -58,7 +61,10 @@ class OrderResource extends Resource
                                 'sundarban' => 'Sundarban Courier',
                                 'peperfly' => 'Peperfly',
                             ]),
-                    ])->columns(3),
+                        Select::make('customer_code')
+                            ->label('Customer')
+                            ->options(Customer::all()->pluck('name', 'id')),
+                    ])->columns(4),
                 
                     TextInput::make('shipping_address')
                         ->label('Shipping Address'),
@@ -115,7 +121,7 @@ class OrderResource extends Resource
                                     ->numeric()
                                     ->thousandsSeparator(',')
                                     ->mapToDecimalSeparator(['.'])
-                            )
+                                )
                                 ->disabled(),
 
                             TextInput::make('total_price')
@@ -165,16 +171,33 @@ class OrderResource extends Resource
 
                 TextColumn::make('total_price')
                     ->money('BDT'),
+                
+                TextColumn::make('payment')
+                    ->formatStateUsing(function ($record){
+                        return Transaction::where('order_id' , $record->id)
+                                    ->where('entity_type' , 'customer')
+                                    ->sum('transaction_amount');
+                    }),
+                    
                 TextColumn::make('order_placed_on')
                     ->sortable()
                     ->date('d/m/Y'),
+                
                 
             ])
             ->filters([
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                
+                Action::make('payment')
+                    ->label('Pay')
+                    ->color('success')
+                    ->icon('heroicon-o-currency-bangladeshi')
+                    ->requiresConfirmation()
+                    ->url(fn (Order $record): string => '/admin/transactions/create?order='.$record['order_number'])
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

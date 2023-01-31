@@ -13,17 +13,17 @@ enum OrderStatus: int
     {
         return match ($this) {
             self::PLACED => 'Order Placed',
-            self::PROCESSING => 'Order is processing',
-            self::RECEIVED => 'Order has been received',
-            self::COMPLETE => 'Order has been completed',
+            self::PROCESSING => 'Partially Paid',
+            self::RECEIVED => 'Payment overflow',
+            self::COMPLETE => 'Paid',
         };
     }
 
     public function color(): string
     {
         return match ($this) {
-            self::PLACED => 'warning',
-            self::PROCESSING => 'primary',
+            self::PLACED => 'secondary',
+            self::PROCESSING => 'warning',
             self::RECEIVED => 'danger',
             self::COMPLETE => 'success',
         };
