@@ -12,7 +12,7 @@ enum OrderStatus: int
     public function name(): string
     {
         return match ($this) {
-            self::PLACED => 'Order Placed',
+            self::PLACED => 'Unpaid',
             self::PROCESSING => 'Partially Paid',
             self::RECEIVED => 'Payment overflow',
             self::COMPLETE => 'Paid',

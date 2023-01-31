@@ -28,36 +28,23 @@ class CreateTransaction extends CreateRecord
             ->body('Your payment has been received.');
     }
 
-    // protected function mutateFormDataBeforeCreate(array $data): array
-    // {
-    //     $order = Order::where('order_number' , '=' , $data['order'])->first();
-    //     if($data['transaction_amount'] > $order->total_price)
-    //         {
-    //             return Notification::make()
-    //                     ->success()
-    //                     ->title('Sorry!')
-    //                     ->body('-----')
-    //                     ->cancel();
-    //         }
-    //     else
-    //         return $data;
-    // }
-
     protected function handleRecordCreation(array $data): Model
     {
         $order = Order::where('order_number' , '=' , $data['order'])->first();
 
-        $data['order_id'] = $order->id;
+        $data['trading_id'] = $order->id;
+        $data['trading_type'] = 'payment';
         $data['entity_type'] = 'customer';
         $data['transaction_type'] = 'debit';
 
         static::getModel()::create($data);
 
-        $data['order_id'] = $order->id;
+        $data['trading_id'] = $order->id;
+        $data['trading_type'] = 'payment';
         $data['entity_type'] = 'company';
         $data['transaction_type'] = 'credit';
 
-        $total_paid = Transaction::where('order_id' , $order->id)
+        $total_paid = Transaction::where('trading_id' , $order->id)
                         ->where('entity_type' , 'customer')
                         ->sum('transaction_amount');
 

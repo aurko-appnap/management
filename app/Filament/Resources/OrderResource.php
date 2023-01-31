@@ -151,7 +151,7 @@ class OrderResource extends Resource
                 TextColumn::make('order_number'),
 
                 BadgeColumn::make('order_status')
-                    ->label('Activity')
+                    ->label('Payment Status')
                     ->sortable()
                     ->enum(collect(OrderStatus::cases())
                         ->mapWithKeys(fn($item) => [$item->value => $item->name()])
@@ -174,7 +174,7 @@ class OrderResource extends Resource
                 
                 TextColumn::make('payment')
                     ->formatStateUsing(function ($record){
-                        return Transaction::where('order_id' , $record->id)
+                        return Transaction::where('trading_id' , $record->id)
                                     ->where('entity_type' , 'customer')
                                     ->sum('transaction_amount');
                     }),
