@@ -208,6 +208,7 @@ class OrderResource extends Resource
                         Order::where('id' , $record['id'])->update(['order_status' => '2']);
                     })
                     ->requiresConfirmation()
+                    ->hidden(fn (Order $record):bool => $record['order_status'] == '2'),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
