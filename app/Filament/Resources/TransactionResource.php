@@ -49,18 +49,22 @@ class TransactionResource extends Resource
                                 'nexuspay' => 'Nexus Pay',
                             ])),
                         TextInput::make('transaction_amount')
+                            ->label('Due Amount')
                             ->prefix('BDT')
                             ->mask(fn (TextInput\Mask $mask) => $mask
                                 ->numeric()
                                 ->thousandsSeparator(',')
                                 ->mapToDecimalSeparator(['.'])
                             )
-                            ->afterStateUpdated(function ($state, callable $get){
-                                $order = Order::where('order_number' , '=' , $get('order'))->first();
-                                if($order->total_price < $state)
-                                {
-                                    
-                                }
+                            ->default(function (){
+                                $ab = request()->get('order');
+                                $order = Order::where('order_number' , '=' , $ab)->first();
+                                $total_paid = Transaction::where('trading_id' , $order->id)
+                                                ->where('entity_type' , 'customer')
+                                                ->sum('transaction_amount');
+
+                                return ($order->total_price - $total_paid);
+                                // dd($order);
                             }),
                     ])->columns(3),
                     TextInput::make('transaction_message'),
