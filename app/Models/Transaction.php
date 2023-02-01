@@ -18,6 +18,7 @@ class Transaction extends Model
         'transaction_amount',
         'transaction_message',
         'transaction_method',
+        'employee_id',
     ];
 
     public function order()
