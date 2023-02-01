@@ -14,7 +14,7 @@ enum OrderStatus: int
         return match ($this) {
             self::PLACED => 'Unpaid',
             self::PROCESSING => 'Partially Paid',
-            self::RECEIVED => 'Payment overflow',
+            self::RECEIVED => 'Order Cancelled',
             self::COMPLETE => 'Paid',
         };
     }

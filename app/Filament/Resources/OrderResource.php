@@ -198,6 +198,16 @@ class OrderResource extends Resource
                     ->icon('heroicon-o-currency-bangladeshi')
                     ->requiresConfirmation()
                     ->url(fn (Order $record): string => '/admin/transactions/create?order='.$record['order_number'])
+                    ->hidden(fn (Order $record):bool => $record['order_status'] == '2'),
+
+                Action::make('cancel')
+                    ->label('Cancel')
+                    ->color('danger')
+                    ->icon('heroicon-o-x-circle')
+                    ->action(function (Order $record){
+                        Order::where('id' , $record['id'])->update(['order_status' => '2']);
+                    })
+                    ->requiresConfirmation()
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
