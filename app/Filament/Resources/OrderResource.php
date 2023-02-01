@@ -206,7 +206,40 @@ class OrderResource extends Resource
                     ->icon('heroicon-o-x-circle')
                     ->action(function (Order $record){
                         Order::where('id' , $record['id'])->update(['order_status' => '2']);
-                    })
+                        
+                        $transaction = Transaction::where('trading_id' , $record['id'])
+                                                    ->where('trading_type' , 'order')
+                                                    ->first();
+                        
+                        $total_paid = Transaction::where('trading_id' , $record['id'])
+                                                    ->where('entity_type' , 'customer')
+                                                    ->sum('transaction_amount');
+
+                        // dd($total_paid);
+                        Transaction::create([
+                            'entity_id' => $transaction->entity_id,
+                            'entity_type' => 'customer',
+                            'employee_id' => auth()->id(),
+                            'trading_id' => $transaction->trading_id,
+                            'trading_type' => 'order_refund',
+                            'transaction_type' => 'credit',
+                            'transaction_amount' => $total_paid, //total payment created on this order
+                            'transaction_message' => 'Payment refund',
+                            'transaction_method' => $transaction->transaction_method,
+                        ]);
+
+                        Transaction::create([
+                            'entity_id' => '1',
+                            'entity_type' => 'company',
+                            'employee_id' => auth()->id(),
+                            'trading_id' => $transaction->trading_id,
+                            'trading_type' => 'order_refund',
+                            'transaction_type' => 'debit',
+                            'transaction_amount' => $total_paid, //total payment created on this order
+                            'transaction_message' => 'Payment refund',
+                            'transaction_method' => $transaction->transaction_method,
+                        ]);
+                    })  
                     ->requiresConfirmation()
                     ->hidden(fn (Order $record):bool => $record['order_status'] == '2'),
             ])
