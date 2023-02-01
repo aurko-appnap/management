@@ -34,6 +34,8 @@ class CreateTransaction extends CreateRecord
 
         $data['trading_id'] = $order->id;
         $data['trading_type'] = 'order';
+        $data['employee_id'] = auth()->id();
+        $data['entity_id'] = $order->customer_code;
         $data['entity_type'] = 'customer';
         $data['transaction_type'] = 'debit';
 
@@ -41,7 +43,8 @@ class CreateTransaction extends CreateRecord
 
         $data['trading_id'] = $order->id;
         $data['trading_type'] = 'order';
-        $data['entity_id'] = auth()->id();
+        $data['employee_id'] = auth()->id();
+        $data['entity_id'] = '1';
         $data['entity_type'] = 'company';
         $data['transaction_type'] = 'credit';
 
