@@ -33,14 +33,15 @@ class CreateTransaction extends CreateRecord
         $order = Order::where('order_number' , '=' , $data['order'])->first();
 
         $data['trading_id'] = $order->id;
-        $data['trading_type'] = 'payment';
+        $data['trading_type'] = 'order';
         $data['entity_type'] = 'customer';
         $data['transaction_type'] = 'debit';
 
         static::getModel()::create($data);
 
         $data['trading_id'] = $order->id;
-        $data['trading_type'] = 'payment';
+        $data['trading_type'] = 'order';
+        $data['entity_id'] = auth()->id();
         $data['entity_type'] = 'company';
         $data['transaction_type'] = 'credit';
 
