@@ -176,7 +176,7 @@ class OrderResource extends Resource
                     ->formatStateUsing(function ($record){
                         return Transaction::where('trading_id' , $record->id)
                                     ->where('entity_type' , 'customer')
-                                    ->where('transaction_type' , 'credit')
+                                    ->where('transaction_type' , 'debit')
                                     ->sum('transaction_amount');
                     }),
                     
