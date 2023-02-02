@@ -18,6 +18,7 @@ class CreatePurchase extends CreateRecord
     protected function handleRecordCreation(array $data): Model
     {
         $data['purchase_status'] = '0';
+        $data['company_id'] = '1';
         $total_price = 0;
         $items = $this->data['PurchaseItem'];
 

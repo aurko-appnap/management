@@ -26,6 +26,11 @@ class Transaction extends Model
         return $this->belongsTo(Order::class);
     }
 
+    public function purchase()
+    {
+        return $this->belongsTo(Purchase::class);
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);

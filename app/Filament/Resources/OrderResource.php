@@ -19,6 +19,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Repeater;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\SelectColumn;
@@ -176,6 +177,7 @@ class OrderResource extends Resource
                     ->formatStateUsing(function ($record){
                         return Transaction::where('trading_id' , $record->id)
                                     ->where('entity_type' , 'customer')
+                                    ->where('trading_type' , 'order')
                                     ->where('transaction_type' , 'debit')
                                     ->sum('transaction_amount');
                     }),
@@ -190,6 +192,7 @@ class OrderResource extends Resource
                 //
             ])
             ->actions([
+                ActionGroup::make([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
                 
@@ -198,8 +201,13 @@ class OrderResource extends Resource
                     ->color('success')
                     ->icon('heroicon-o-currency-bangladeshi')
                     ->requiresConfirmation()
-                    ->url(fn (Order $record): string => '/admin/transactions/create?order='.$record['order_number'])
-                    ->hidden(fn (Order $record):bool => $record['order_status'] == '2'),
+                    ->url(fn (Order $record): string => '/admin/transactions/create?order='.$record['order_number'].'&trading=order')
+                    ->hidden(fn (Order $record):bool => $record['order_status'] == '2')
+                    ->visible(fn (Order $record):bool => 
+                    $record['total_price'] != Transaction::where('trading_id' , $record['id'])
+                    ->where('entity_type' , 'customer')
+                    ->where('transaction_type' , 'debit')
+                    ->sum('transaction_amount')),
 
                 Action::make('cancel')
                     ->label('Cancel')
@@ -217,32 +225,37 @@ class OrderResource extends Resource
                                                     ->sum('transaction_amount');
 
                         // dd($total_paid);
-                        Transaction::create([
-                            'entity_id' => $transaction->entity_id,
-                            'entity_type' => 'customer',
-                            'employee_id' => auth()->id(),
-                            'trading_id' => $transaction->trading_id,
-                            'trading_type' => 'order_refund',
-                            'transaction_type' => 'credit',
-                            'transaction_amount' => $total_paid, //total payment created on this order
-                            'transaction_message' => 'Payment refund',
-                            'transaction_method' => $transaction->transaction_method,
-                        ]);
+                        if($total_paid > 0)
+                        {
+                            Transaction::create([
+                                'entity_id' => $transaction->entity_id,
+                                'entity_type' => 'customer',
+                                'employee_id' => auth()->id(),
+                                'trading_id' => $transaction->trading_id,
+                                'trading_type' => 'order',
+                                'transaction_type' => 'credit',
+                                'transaction_amount' => $total_paid, //total payment created on this order
+                                'transaction_message' => 'Payment refund',
+                                'transaction_method' => $transaction->transaction_method,
+                            ]);
 
-                        Transaction::create([
-                            'entity_id' => '1',
-                            'entity_type' => 'company',
-                            'employee_id' => auth()->id(),
-                            'trading_id' => $transaction->trading_id,
-                            'trading_type' => 'order_refund',
-                            'transaction_type' => 'debit',
-                            'transaction_amount' => $total_paid, //total payment created on this order
-                            'transaction_message' => 'Payment refund',
-                            'transaction_method' => $transaction->transaction_method,
-                        ]);
+                            Transaction::create([
+                                'entity_id' => '1',
+                                'entity_type' => 'company',
+                                'employee_id' => auth()->id(),
+                                'trading_id' => $transaction->trading_id,
+                                'trading_type' => 'order',
+                                'transaction_type' => 'debit',
+                                'transaction_amount' => $total_paid, //total payment created on this order
+                                'transaction_message' => 'Payment refund',
+                                'transaction_method' => $transaction->transaction_method,
+                            ]);
+                        }
                     })  
                     ->requiresConfirmation()
                     ->hidden(fn (Order $record):bool => $record['order_status'] == '2'),
+                ]),
+                
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),

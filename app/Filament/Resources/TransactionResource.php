@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Order;
+use App\Models\Purchase;
 use App\Models\Transaction;
 use Filament\Resources\Form;
 use Illuminate\Http\Request;
@@ -21,6 +22,7 @@ use Symfony\Component\Console\Input\Input;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TransactionResource\Pages;
 use App\Filament\Resources\TransactionResource\RelationManagers;
+use Filament\Forms\Components\Hidden;
 
 class TransactionResource extends Resource
 {
@@ -35,6 +37,9 @@ class TransactionResource extends Resource
             ->schema([
                 Card::make()->schema([
                     Card::make()->schema([
+                        Hidden::make('trading')
+                            ->default(request()->get('trading')),
+                        
                         TextInput::make('order')
                             ->default(request()->get('order'))
                             ->required()
@@ -57,13 +62,29 @@ class TransactionResource extends Resource
                                 ->mapToDecimalSeparator(['.'])
                             )
                             ->default(function (){
-                                $ab = request()->get('order');
-                                $order = Order::where('order_number' , '=' , $ab)->first();
-                                $total_paid = Transaction::where('trading_id' , $order->id)
-                                                ->where('entity_type' , 'customer')
-                                                ->sum('transaction_amount');
+                                if(request()->get('trading')=='order')
+                                {
+                                    $ab = request()->get('order');
+                                    $order = Order::where('order_number' , '=' , $ab)->first();
+                                    $total_paid = Transaction::where('trading_id' , $order->id)
+                                                    ->where('entity_type' , 'customer')
+                                                    ->where('transaction_type' , 'debit')
+                                                    ->sum('transaction_amount');
 
-                                return ($order->total_price - $total_paid);
+                                    return ($order->total_price - $total_paid);
+                                }
+                                else if(request()->get('trading')=='purchase')
+                                {
+                                    $ab = request()->get('order');
+                                    $order = Purchase::where('purchase_number' , '=' , $ab)->first();
+                                    $total_paid = Transaction::where('trading_id' , $order->id)
+                                                    ->where('entity_type' , 'company')
+                                                    ->where('transaction_type' , 'debit')
+                                                    ->sum('transaction_amount');
+
+                                    return ($order->total_purchased_price - $total_paid);
+                                }
+                                
                                 // dd($order);
                             }),
                     ])->columns(3),

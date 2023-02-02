@@ -21,4 +21,14 @@ class Purchase extends Model
     {
         return $this->hasMany(PurchaseItem::class);
     } 
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }
