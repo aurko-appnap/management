@@ -15,6 +15,11 @@ return new class extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
+            $table->string('purchase_number')->nullable();
+            $table->string('purchase_status')->nullable();
+            $table->string('supplier_id')->nullable();
+            $table->string('company_id')->nullable();
+            $table->string('total_purchased_price')->nullable();
             $table->timestamps();
         });
     }
