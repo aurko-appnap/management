@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Purchase extends Model
 {
@@ -15,4 +16,9 @@ class Purchase extends Model
         'company_id',
         'total_purchased_price',
     ];
+
+    public function PurchaseItem(): HasMany
+    {
+        return $this->hasMany(PurchaseItem::class);
+    } 
 }
