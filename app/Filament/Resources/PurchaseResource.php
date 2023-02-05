@@ -27,6 +27,7 @@ use Filament\Forms\Components\Placeholder;
 use App\Filament\Resources\PurchaseResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\PurchaseResource\RelationManagers;
+use App\Models\PurchaseItem;
 
 class PurchaseResource extends Resource
 {
@@ -219,6 +220,17 @@ class PurchaseResource extends Resource
                                 'transaction_method' => $transaction->transaction_method,
                             ]);
                         }
+
+                        $purchase_items = PurchaseItem::where('purchase_id' , '=' , $record['id'])->get();
+                        
+                        foreach($purchase_items as $key => $item)
+                            {
+                                $product = Product::find($item->product_id);
+                                $updated_inventory = $product->inventory - $item->product_quantity;
+                                Product::where('id' , '=' , $item->product_id)
+                                    ->update(['inventory' => $updated_inventory]);
+                            }
+
                     })  
                     ->requiresConfirmation()
                     ->hidden(fn (Purchase $record):bool => $record['purchase_status'] == '2'),
