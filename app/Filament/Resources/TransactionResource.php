@@ -99,12 +99,19 @@ class TransactionResource extends Resource
     {
         return $table
             ->columns([
-            ])
+                TextColumn::make('id')->sortable(),
+                TextColumn::make('trading_id'),
+                TextColumn::make('trading_type'),
+                TextColumn::make('entity_type'),
+                TextColumn::make('transaction_type'),
+                TextColumn::make('transaction_amount'),
+                TextColumn::make('transaction_message'),
+            ])->defaultSort('id' , 'desc')
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                // Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
