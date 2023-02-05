@@ -2,10 +2,11 @@
 
 namespace App\Filament\Resources\PurchaseResource\Pages;
 
-use App\Filament\Resources\PurchaseResource;
+use App\Models\Product;
 use Filament\Pages\Actions;
-use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
+use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Resources\PurchaseResource;
 
 class CreatePurchase extends CreateRecord
 {
@@ -22,6 +23,14 @@ class CreatePurchase extends CreateRecord
         $total_price = 0;
         $items = $this->data['PurchaseItem'];
 
+        foreach ($items as $key => $item)
+        {
+            $product = Product::find($item['product_id']);
+            $updated_inventory = $product->inventory + $item['product_quantity'];
+            Product::where('id' , $item['product_id'])
+                ->update(['inventory' => $updated_inventory]);
+        }
+            
         foreach ($items as $key => $item)
             $total_price = $total_price + $item['product_total_price'];
         
