@@ -45,7 +45,7 @@ class OrderResource extends Resource
                     Card::make()->schema([
                         TextInput::make('order_number')
                             ->label('Order Number')
-                            ->default('APPNAP-'. random_int(1000,9999))
+                            ->default('ORD-'. random_int(1000,9999))
                             ->required()
                             ->disabled(),
                         
