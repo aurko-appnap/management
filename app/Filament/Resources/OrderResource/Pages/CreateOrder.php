@@ -29,14 +29,6 @@ class CreateOrder extends CreateRecord
         
         $data['total_price']=$total_price;
         $data['order_status']=0;
-
-        foreach ($items as $key => $item)
-        {
-            $product = Product::find($item['product_id']);
-            $updated_inventory = $product->inventory - $item['product_quantity'];
-            Product::where('id' , $item['product_id'])
-                ->update(['inventory' => $updated_inventory]);
-        }
         
         return static::getModel()::create($data);
     }
