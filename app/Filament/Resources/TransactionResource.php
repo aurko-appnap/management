@@ -100,7 +100,24 @@ class TransactionResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('id')->sortable(),
-                TextColumn::make('trading_id'),
+                TextColumn::make('trading_id')
+                    ->formatStateUsing(function (Transaction $record){
+                        // $transaction = Transaction::find($record);
+                        // dd($record);
+
+                        if($record->trading_type == 'order')
+                            {
+                                $order = Order::where('id' , '=' , $record->trading_id)->first();
+                                return $order->order_number;
+                            }
+                        else if($record->trading_type == 'purchase')
+                            {
+                                $purchase = Purchase::where('id' , '=' , $record->trading_id)->first();
+                                return $purchase->purchase_number;
+                            }
+                        else{}
+                    }),
+
                 TextColumn::make('trading_type'),
                 TextColumn::make('entity_type'),
                 TextColumn::make('transaction_type'),
