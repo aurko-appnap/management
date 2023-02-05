@@ -5,6 +5,7 @@ namespace App\Filament\Resources\TransactionResource\Pages;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Purchase;
+use App\Models\OrderItem;
 use App\Models\Transaction;
 use Filament\Pages\Actions;
 use App\Models\PurchaseItem;
@@ -130,7 +131,18 @@ class CreateTransaction extends CreateRecord
                             ->sum('transaction_amount');
 
             if($order->total_price == $total_paid)
-                Order::where('id' , $order->id)->update(['order_status' => '3']);
+                {
+                    Order::where('id' , $order->id)->update(['order_status' => '3']);
+                    
+                    $order_items = OrderItem::where('order_id' , '=' , $order->id)->get();
+                    foreach ($order_items as $key => $item)
+                    {
+                        $product = Product::find($item['product_id']);
+                        $updated_inventory = $product->inventory - $item['product_quantity'];
+                        Product::where('id' , $item['product_id'])
+                            ->update(['inventory' => $updated_inventory]);
+                    }
+                }
             else if($order->total_price < $total_paid)
                 Order::where('id' , $order->id)->update(['order_status' => '2']);
             else if($order->total_price > $total_paid)
