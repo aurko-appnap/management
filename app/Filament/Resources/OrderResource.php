@@ -94,6 +94,7 @@ class OrderResource extends Resource
                                     if($product)
                                     {
                                         $set('product_price' , $product->price);
+                                        $set('product_inventory' , $product->inventory);
                                         $total_prices = $get('product_quantity')*$product->price;
                                         $set('total_price', $total_prices);
                                         // $set('product_picture' , $product->getMedia('display_pictures'));
@@ -106,8 +107,11 @@ class OrderResource extends Resource
                             TextInput::make('product_quantity')
                                 ->label('Quantity')
                                 ->integer()
-                                ->default(1)
-                                ->minValue(1)
+                                ->default(0)
+                                ->minValue(0)
+                                ->maxValue(function (callable $get){
+                                    return $get('product_inventory');
+                                })
                                 ->required()
                                 ->reactive()
                                 ->afterStateUpdated(function($state , callable $set, callable $get){
