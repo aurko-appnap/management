@@ -2,10 +2,11 @@
 
 namespace App\Filament\Resources\OrderResource\Pages;
 
-use App\Filament\Resources\OrderResource;
+use App\Models\Product;
 use Filament\Pages\Actions;
-use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
+use App\Filament\Resources\OrderResource;
+use Filament\Resources\Pages\CreateRecord;
 
 
 class CreateOrder extends CreateRecord
@@ -22,6 +23,14 @@ class CreateOrder extends CreateRecord
         $data['user_id'] = auth()->id();
         $total_price = 0;
         $items = $this->data['OrderItem'];
+
+        foreach ($items as $key => $item)
+        {
+            $product = Product::find($item['product_id']);
+            $updated_inventory = $product->inventory - $item['product_quantity'];
+            Product::where('id' , $item['product_id'])
+                ->update(['inventory' => $updated_inventory]);
+        }
 
         foreach ($items as $key => $item)
             $total_price = $total_price + $item['total_price'];
