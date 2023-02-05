@@ -7,6 +7,7 @@ use Filament\Tables;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Customer;
+use App\Models\OrderItem;
 use App\Enums\OrderStatus;
 use App\Models\Transaction;
 use Filament\Resources\Form;
@@ -230,7 +231,6 @@ class OrderResource extends Resource
                                                     ->where('entity_type' , 'customer')
                                                     ->sum('transaction_amount');
 
-                        // dd($total_paid);
                         if($total_paid > 0)
                         {
                             Transaction::create([
@@ -257,6 +257,16 @@ class OrderResource extends Resource
                                 'transaction_method' => $transaction->transaction_method,
                             ]);
                         }
+
+                        $order_items = OrderItem::where('order_id' , '=' , $record['id'])->get();
+                        
+                        foreach($order_items as $key => $item)
+                            {
+                                $product = Product::find($item->product_id);
+                                $updated_inventory = $product->inventory + $item->product_quantity;
+                                Product::where('id' , '=' , $item->product_id)
+                                    ->update(['inventory' => $updated_inventory]);
+                            }
                     })  
                     ->requiresConfirmation()
                     ->hidden(fn (Order $record):bool => $record['order_status'] == '2'),
