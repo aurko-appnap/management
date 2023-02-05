@@ -3,9 +3,11 @@
 namespace App\Filament\Resources\TransactionResource\Pages;
 
 use App\Models\Order;
+use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Transaction;
 use Filament\Pages\Actions;
+use App\Models\PurchaseItem;
 use Filament\Support\Exceptions\Halt;
 use Illuminate\Database\Eloquent\Model;
 use Filament\Notifications\Notification;
@@ -164,12 +166,25 @@ class CreateTransaction extends CreateRecord
                             ->sum('transaction_amount');
 
             if($purchase->total_purchased_price == $total_paid)
+            {
                 Purchase::where('id' , $purchase->id)->update(['purchase_status' => '3']);
+                $purchase_items = PurchaseItem::where('purchase_id' , '=' , $purchase->id)->get();
+
+                foreach ($purchase_items as $key => $item)
+                {
+                    $product = Product::find($item['product_id']);
+                    $updated_inventory = $product->inventory + $item['product_quantity'];
+                    Product::where('id' , $item['product_id'])
+                        ->update(['inventory' => $updated_inventory]);
+                }
+            }
             else if($purchase->total_purchased_price < $total_paid)
                 Purchase::where('id' , $purchase->id)->update(['purchase_status' => '2']);
             else if($purchase->total_purchased_price > $total_paid)
                 Purchase::where('id' , $purchase->id)->update(['purchase_status' => '1']);
             else{}
+
+            
 
             return static::getModel()::create($data);
         }
