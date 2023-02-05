@@ -63,6 +63,7 @@ class OrderResource extends Resource
                                 'peperfly' => 'Peperfly',
                             ]),
                         Select::make('customer_code')
+                            ->required()
                             ->label('Customer')
                             ->options(Customer::all()->pluck('name', 'id')),
                     ])->columns(4),
@@ -106,6 +107,7 @@ class OrderResource extends Resource
 
                             TextInput::make('product_quantity')
                                 ->label('Quantity')
+                                ->required()
                                 ->integer()
                                 ->default(0)
                                 ->minValue(0)

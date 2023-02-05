@@ -46,6 +46,7 @@ class PurchaseResource extends Resource
                             ->required()
                             ->disabled(),
                     Select::make('supplier_id')
+                            ->required()
                             ->label('Supplier Name')
                             ->options(Supplier::all()->pluck('name' , 'id')),
                 ])->columns(2),

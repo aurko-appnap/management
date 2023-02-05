@@ -134,18 +134,22 @@ class ProductResource extends Resource
                 
                 TextColumn::make('brand.name')->searchable(),
                 
-                BadgeColumn::make('is_available')
-                    ->label('Availability')
-                    ->sortable()
-                    ->enum(collect(ProductStatus::cases())
-                        ->mapWithKeys(fn($item) => [$item->value => $item->name()])
-                        ->toArray())
-                    ->color(function ($state) {
-                        $options = collect(ProductStatus::cases())
-                            ->mapWithKeys(fn($item) => [$item->value => $item->color()])
-                            ->toArray();
-                        return isset($options[$state]) ? $options[$state] : '';
-                    })
+                TextColumn::make('inventory')
+                    ->label('Available')
+                    ->sortable(),
+
+                // BadgeColumn::make('is_available')
+                //     ->label('Availability')
+                //     ->sortable()
+                //     ->enum(collect(ProductStatus::cases())
+                //         ->mapWithKeys(fn($item) => [$item->value => $item->name()])
+                //         ->toArray())
+                //     ->color(function ($state) {
+                //         $options = collect(ProductStatus::cases())
+                //             ->mapWithKeys(fn($item) => [$item->value => $item->color()])
+                //             ->toArray();
+                //         return isset($options[$state]) ? $options[$state] : '';
+                //     })
             ])
             ->filters([
                 //

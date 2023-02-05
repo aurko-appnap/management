@@ -25,18 +25,19 @@ class CreateOrder extends CreateRecord
         $items = $this->data['OrderItem'];
 
         foreach ($items as $key => $item)
+            $total_price = $total_price + $item['total_price'];
+        
+        $data['total_price']=$total_price;
+        $data['order_status']=0;
+
+        foreach ($items as $key => $item)
         {
             $product = Product::find($item['product_id']);
             $updated_inventory = $product->inventory - $item['product_quantity'];
             Product::where('id' , $item['product_id'])
                 ->update(['inventory' => $updated_inventory]);
         }
-
-        foreach ($items as $key => $item)
-            $total_price = $total_price + $item['total_price'];
         
-        $data['total_price']=$total_price;
-        $data['order_status']=0;
         return static::getModel()::create($data);
     }
 }
