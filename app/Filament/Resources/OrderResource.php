@@ -29,6 +29,7 @@ use Filament\Forms\Components\Placeholder;
 use App\Filament\Resources\OrderResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\OrderResource\RelationManagers;
+use App\Filament\Resources\OrderResource\Widgets\OrderCountChart;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 
 class OrderResource extends Resource
@@ -282,6 +283,13 @@ class OrderResource extends Resource
     {
         return [
             //
+        ];
+    }
+
+    public static function getWidgets(): array
+    {
+        return [
+            OrderCountChart::class,
         ];
     }
     
