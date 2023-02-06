@@ -22,6 +22,7 @@ use Symfony\Component\Console\Input\Input;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\TransactionResource\Pages;
 use App\Filament\Resources\TransactionResource\RelationManagers;
+use App\Filament\Resources\TransactionResource\Widgets\TransactionStats;
 use Filament\Forms\Components\Hidden;
 
 class TransactionResource extends Resource
@@ -142,6 +143,13 @@ class TransactionResource extends Resource
         ];
     }
     
+    public static function getWidgets(): array
+    {
+        return [
+            TransactionStats::class,
+        ];
+    }
+
     public static function getPages(): array
     {
         return [
