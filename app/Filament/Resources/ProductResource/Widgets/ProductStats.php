@@ -33,7 +33,7 @@ class ProductStats extends BaseWidget
                 ->description($popular_product_id->p_quantity.' items have been sold')
                 ->descriptionIcon('heroicon-s-trending-up')
                 ->color('success'),
-            Card::make('Average time on page', '3:12'),
+            // Card::make('Average time on page', '3:12'),
         ];
     }
 }
