@@ -10,12 +10,14 @@ use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Supplier;
 use App\Models\Transaction;
+use App\Models\PurchaseItem;
 use Filament\Resources\Form;
 use App\Enums\PurchaseStatus;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Card;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Repeater;
 use Filament\Tables\Columns\TextColumn;
@@ -27,7 +29,6 @@ use Filament\Forms\Components\Placeholder;
 use App\Filament\Resources\PurchaseResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\PurchaseResource\RelationManagers;
-use App\Models\PurchaseItem;
 
 class PurchaseResource extends Resource
 {
@@ -157,7 +158,10 @@ class PurchaseResource extends Resource
 
             ])->defaultSort('id' , 'desc')
             ->filters([
-                //
+                Filter::make('Paid')->query(fn (Builder $query): Builder => $query->where('purchase_status', '=', '3')),
+                Filter::make('Unpaid')->query(fn (Builder $query): Builder => $query->where('purchase_status', '=', '0')),
+                Filter::make('Partially Paid')->query(fn (Builder $query): Builder => $query->where('purchase_status', '=', '1')),
+                Filter::make('Cancelled')->query(fn (Builder $query): Builder => $query->where('purchase_status', '=', '2')),
             ])
             ->actions([
                 ActionGroup::make([
