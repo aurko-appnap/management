@@ -15,15 +15,15 @@ class OrderCountChart extends LineChartWidget
                 ->selectRaw('total_price, id')
                 ->where('order_status', '!=' , '2')
                 ->limit(10)
-                ->orderBy('id' , 'ASC')
+                ->orderBy('id' , 'DESC')
                 ->get();
         $data = [];
         $label = [];
-        $count = 0;
+        $count = 10;
         foreach($order as $key => $item)
             {
                 $label[] = $count;
-                $count = $count + 1;
+                $count = $count - 1;
                 $data[] = $item->total_price;
             }
         
