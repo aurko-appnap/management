@@ -1,6 +1,7 @@
 <?php
 
 use App\Filament\Resources\OrderResource\Widgets\OrderCountChart;
+use App\Filament\Resources\PurchaseResource\Widgets\PurchaseChart;
 use App\Filament\Resources\TransactionResource\Widgets\TransactionStats;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -145,6 +146,7 @@ return [
             // Widgets\FilamentInfoWidget::class,
             TransactionStats::class,
             OrderCountChart::class,
+            PurchaseChart::class,
         ],
     ],
 
