@@ -177,6 +177,13 @@ class ProductResource extends Resource
                                 fn (Builder $query, $price): Builder => $query->where('price', '<=', $price),
                             );
                     }),
+                // Filter::make('Popular')
+                //     ->query(function (Builder $query): Builder {
+                //         return $query
+                //             ->select('products.*, SUM(order_items.product_quantity) as quantity')
+                //             ->join('order_items', 'products.id' , '=' , 'order_items.product_id')
+                //             ->orderBy('quantity' , 'DESC');
+                //     }),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
