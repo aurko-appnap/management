@@ -12,7 +12,7 @@ class OrderCountChart extends LineChartWidget
     protected function getData(): array
     {
         $order = DB::table('orders')
-                ->selectRaw('total_price, id')
+                ->selectRaw('total_price, id, order_number')
                 ->where('order_status', '!=' , '2')
                 ->limit(10)
                 ->orderBy('id' , 'DESC')
@@ -22,7 +22,7 @@ class OrderCountChart extends LineChartWidget
         $count = 10;
         foreach($order as $key => $item)
             {
-                $label[] = $count;
+                $label[] = $item->order_number;
                 $count = $count - 1;
                 $data[] = $item->total_price;
             }
@@ -32,7 +32,7 @@ class OrderCountChart extends LineChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Amount of Last Orders',
+                    'label' => 'Order Amount',
                     'borderJoinStyle' => 'round',
                     'tension' => '0.5',
                     'pointBackgroundColor' => '#DFFF00',
