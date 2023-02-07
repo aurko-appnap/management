@@ -15,7 +15,7 @@ class OrderCountChart extends LineChartWidget
                 ->selectRaw('total_price, id')
                 ->where('order_status', '!=' , '2')
                 ->limit(10)
-                ->orderBy('id' , 'DESC')
+                ->orderBy('id' , 'ASC')
                 ->get();
         $data = [];
         $label = [];
@@ -33,6 +33,9 @@ class OrderCountChart extends LineChartWidget
             'datasets' => [
                 [
                     'label' => 'Amount of Last Orders',
+                    'borderJoinStyle' => 'round',
+                    'tension' => '0.5',
+                    'pointBackgroundColor' => '#DFFF00',
                     'data' => $data,
                 ],
             ],
