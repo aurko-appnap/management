@@ -15,6 +15,7 @@ use Filament\Resources\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Card;
 use Filament\Tables\Actions\Action;
+use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Repeater;
@@ -24,13 +25,14 @@ use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Columns\SelectColumn;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\Placeholder;
 use App\Filament\Resources\OrderResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\OrderResource\RelationManagers;
-use App\Filament\Resources\OrderResource\Widgets\OrderCountChart;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
+use App\Filament\Resources\OrderResource\Widgets\OrderCountChart;
 
 class OrderResource extends Resource
 {
@@ -197,7 +199,15 @@ class OrderResource extends Resource
                 
             ])
             ->filters([
-                //
+                Filter::make('Paid')->query(fn (Builder $query): Builder => $query->where('order_status', '=', '3')),
+                Filter::make('Unpaid')->query(fn (Builder $query): Builder => $query->where('order_status', '=', '0')),
+                Filter::make('Partially Paid')->query(fn (Builder $query): Builder => $query->where('order_status', '=', '1')),
+                Filter::make('Cancelled')->query(fn (Builder $query): Builder => $query->where('order_status', '=', '2')),
+                
+                // SelectFilter::make('Customer')
+                //     ->multiple()
+                //     ->relationship('customer' , 'name'),
+
             ])
             ->actions([
                 ActionGroup::make([
