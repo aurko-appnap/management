@@ -16,7 +16,9 @@ use Filament\Resources\Form;
 use Akaunting\Money\Currency;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
+use Illuminate\Support\Facades\DB;
 use Filament\Forms\Components\Card;
+use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\IconColumn;
@@ -27,6 +29,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\RichEditor;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Pipeline\Pipeline;
 use Filament\Forms\Components\TextInput\Mask;
 use App\Filament\Resources\ProductResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -34,7 +37,6 @@ use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Filament\Resources\ProductResource\Widgets\ProductStats;
-use Illuminate\Contracts\Pipeline\Pipeline;
 
 class ProductResource extends Resource
 {
@@ -153,7 +155,28 @@ class ProductResource extends Resource
                 //     })
             ])
             ->filters([
-                //
+                Filter::make('Available')
+                    ->query(fn (Builder $query): Builder => $query->where('inventory', '>', '0')),
+                SelectFilter::make('Brands')
+                    ->multiple()
+                    ->relationship('brand', 'name'),
+                
+                Filter::make('created_at')
+                    ->form([
+                        TextInput::make('price_from'),
+                        TextInput::make('price_until'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['price_from'],
+                                fn (Builder $query, $price): Builder => $query->where('price', '>=', $price),
+                            )
+                            ->when(
+                                $data['price_until'],
+                                fn (Builder $query, $price): Builder => $query->where('price', '<=', $price),
+                            );
+                    }),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
