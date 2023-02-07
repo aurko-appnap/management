@@ -4,28 +4,28 @@ namespace App\Enums;
 
 enum OrderStatus: int
 {
-    case PLACED = 0;
-    case PROCESSING = 1;
-    case RECEIVED = 2;
-    case COMPLETE = 3;
+    case UNPAID = 0;
+    case PARTIAL_PAID = 1;
+    case CANCELLED = 2;
+    case PAID = 3;
 
     public function name(): string
     {
         return match ($this) {
-            self::PLACED => 'Unpaid',
-            self::PROCESSING => 'Partially Paid',
-            self::RECEIVED => 'Cancelled',
-            self::COMPLETE => 'Paid',
+            self::UNPAID => 'Unpaid',
+            self::PARTIAL_PAID => 'Partially Paid',
+            self::CANCELLED => 'Cancelled',
+            self::PAID => 'Paid',
         };
     }
 
     public function color(): string
     {
         return match ($this) {
-            self::PLACED => 'secondary',
-            self::PROCESSING => 'warning',
-            self::RECEIVED => 'danger',
-            self::COMPLETE => 'success',
+            self::UNPAID => 'secondary',
+            self::PARTIAL_PAID => 'warning',
+            self::CANCELLED => 'danger',
+            self::PAID => 'success',
         };
     }
 }
