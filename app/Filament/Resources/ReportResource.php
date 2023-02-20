@@ -46,6 +46,10 @@ class ReportResource extends Resource
                         ->color('success')
                         ->icon('heroicon-o-book-open')
                         ->url('reports/sales-report'),
+                    
+                    Action::make('customer-order-summary')
+                        ->url('customers/customer-order-summary'),
+
                 ])
             ])
             ->bulkActions([
