@@ -46,13 +46,13 @@ class CustomerResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
                 ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
                     Action::make('customer-order-summary')
-                        ->label('Customer Order Summary')
+                        ->label('Order Summary')
                         ->color('success')
                         ->icon('heroicon-o-book-open')
-                        ->url('customers/customer-order-summary'),
+                        ->url(fn (Customer $record):string => 'customers/customer-order-summary/'.$record['id']),
                 ])
             ])
             ->bulkActions([
@@ -73,7 +73,7 @@ class CustomerResource extends Resource
             'index' => Pages\ListCustomers::route('/'),
             'create' => Pages\CreateCustomer::route('/create'),
             'edit' => Pages\EditCustomer::route('/{record}/edit'),
-            'customer-order-summary' => Pages\CustomerOrderSummary::route('/customer-order-summary'),
+            'customer-order-summary' => Pages\CustomerOrderSummary::route('/customer-order-summary/{record}'),
         ];
     }    
 }

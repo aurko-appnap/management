@@ -1,40 +1,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 <x-filament::page>
-<style>
-table{
-    width: 100%;
-    font-size: 18px;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid gray;
-}
-thead, tbody{
-    text-align: center;
-}
-th, td{
-    border: 1px solid gray;
-    padding: 3px 0px 3px 0px;
-}
-caption{
-    font-size: 25px;
-    text-transform: uppercase;
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-.summary_section{
-    font-size: 18px;
-}
-canvas{
-    background-color: aliceblue;
-    border-radius: 10px;
-    padding: 15px 10px 5px 10px;
-    box-shadow: rgba(199, 199, 199, 0.35) 0px 5px 15px;
-}
-.grid-container {
-  display: grid;
-  grid-template-columns: auto auto;
-}
-</style>
+    <link rel="stylesheet" href="{{asset('css/custom.css')}}">
 
 <div class="grid-container">
     <canvas class="grid_item" id="statChart" style="width:100%;max-width:500px"></canvas>
