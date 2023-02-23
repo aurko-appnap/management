@@ -287,6 +287,12 @@ class OrderResource extends Resource
                     ->color('success')
                     ->icon('heroicon-o-book-open')
                     ->url(fn (Order $record):string => '/admin/orders/order-detail/'.$record['id']),
+
+                Action::make('payment-summary')
+                    ->label('Payment Summary')
+                    ->color('success')
+                    ->icon('heroicon-o-book-open')
+                    ->url(fn (Order $record):string => '/admin/orders/payment-summary/'.$record['id']),
                 ]),
                 
             ])
@@ -316,6 +322,7 @@ class OrderResource extends Resource
             'create' => Pages\CreateOrder::route('/create'),
             'edit' => Pages\EditOrder::route('/{record}/edit'),
             'order-detail' => Pages\DetailOrder::route('/order-detail/{record}'),
+            'payment-summary' => Pages\PaymentSummary::route('/payment-summary/{record}'),
         ];
     }    
 }
