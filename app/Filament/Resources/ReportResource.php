@@ -47,8 +47,11 @@ class ReportResource extends Resource
                         ->icon('heroicon-o-book-open')
                         ->url('reports/sales-report'),
                     
-                    Action::make('customer-order-summary')
-                        ->url('customers/customer-order-summary'),
+                    Action::make('popular-product-list')
+                        ->label('Top Selling Products')
+                        ->color('success')
+                        ->icon('heroicon-o-book-open')
+                        ->url('/admin/reports/popular-product-list'),
 
                 ])
             ])
@@ -71,6 +74,7 @@ class ReportResource extends Resource
             'create' => Pages\CreateReport::route('/create'),
             'edit' => Pages\EditReport::route('/{record}/edit'),
             'sales-report' => Pages\SalesReport::route('/sales-report'),
+            'popular-product-list' => Pages\PopularProductList::route('/popular-product-list'),
         ];
     }    
 }
