@@ -13,10 +13,12 @@ use App\Enums\CategoryStatus;
 use Filament\Resources\Table;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Card;
+use Filament\Tables\Actions\Action;
 use Filament\Forms\Components\Toggle;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
+use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Forms\Components\RichEditor;
 use Filament\Tables\Actions\DeleteAction;
@@ -26,6 +28,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use App\Filament\Resources\CategoryResource\RelationManagers;
+use App\Filament\Resources\CategoryResource\Pages\OrderSummary;
 
 class CategoryResource extends Resource
 {
@@ -96,26 +99,33 @@ class CategoryResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                DeleteAction::make()
-                    ->before(function (Category $record, DeleteAction $action)
-                    {
-                        // dd($record);
-                        $temp = Product::where('category_id' , $record->id)->count();
-                        if($temp != 0)
-                            {
-                                Notification::make()
-                                    ->warning()
-                                    ->title('Sorry!')
-                                    ->body('This category isn\'t empty!')
-                                    ->send();
-                    
-                                $action->cancel();
-                            }
-                    }),
-                Tables\Actions\ForceDeleteAction::make(),
-                Tables\Actions\RestoreAction::make(),
+                ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\EditAction::make(),
+                    DeleteAction::make()
+                        ->before(function (Category $record, DeleteAction $action)
+                        {
+                            // dd($record);
+                            $temp = Product::where('category_id' , $record->id)->count();
+                            if($temp != 0)
+                                {
+                                    Notification::make()
+                                        ->warning()
+                                        ->title('Sorry!')
+                                        ->body('This category isn\'t empty!')
+                                        ->send();
+                        
+                                    $action->cancel();
+                                }
+                        }),
+                    Tables\Actions\ForceDeleteAction::make(),
+                    Tables\Actions\RestoreAction::make(),
+                    Action::make('customer-order-summary')
+                        ->label('Order Summary')
+                        ->color('success')
+                        ->icon('heroicon-o-book-open')
+                        ->url(fn (Category $record):string => '/admin/categories/order-detail/'.$record['id']),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -146,6 +156,7 @@ class CategoryResource extends Resource
             'index' => Pages\ListCategories::route('/'),
             'create' => Pages\CreateCategory::route('/create'),
             'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'order-summary' => OrderSummary::route('/order-detail/{record}')
         ];
     }    
 }
