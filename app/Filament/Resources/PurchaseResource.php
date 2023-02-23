@@ -238,6 +238,11 @@ class PurchaseResource extends Resource
                     })
                     ->requiresConfirmation()
                     ->hidden(fn (Purchase $record):bool => $record['purchase_status'] == '2'),
+                Action::make('payment-summary')
+                    ->label('Payment Summary')
+                    ->color('success')
+                    ->icon('heroicon-o-book-open')
+                    ->url(fn (Purchase $record):string => '/admin/purchases/payment-summary/'.$record['id']),
                 ])
                 
 
@@ -262,6 +267,7 @@ class PurchaseResource extends Resource
             'create' => Pages\CreatePurchase::route('/create'),
             'edit' => Pages\EditPurchase::route('/{record}/edit'),
             'purchase-detail' => Pages\PurchaseDetail::route('/purchase-detail/{record}'),
+            'payment-summary' => Pages\PaymentSummary::route('/payment-summary/{record}'),
         ];
     }    
 }
