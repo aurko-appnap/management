@@ -281,6 +281,12 @@ class OrderResource extends Resource
                     })  
                     ->requiresConfirmation()
                     ->hidden(fn (Order $record):bool => $record['order_status'] == '2'),
+                
+                Action::make('customer-order-summary')
+                    ->label('Order Detail')
+                    ->color('success')
+                    ->icon('heroicon-o-book-open')
+                    ->url(fn (Order $record):string => '/admin/orders/order-detail/'.$record['id']),
                 ]),
                 
             ])

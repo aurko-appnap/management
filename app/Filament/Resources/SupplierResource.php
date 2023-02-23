@@ -2,18 +2,17 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\SupplierResource\Pages;
-use App\Filament\Resources\SupplierResource\RelationManagers;
-use App\Models\Supplier;
-use Filament\Forms;
-use Filament\Forms\Components\TextInput;
-use Filament\Resources\Form;
-use Filament\Resources\Resource;
-use Filament\Resources\Table;
 use Filament\Tables;
+use App\Models\Supplier;
+use Filament\Resources\Form;
+use Filament\Resources\Table;
+use Filament\Resources\Resource;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Actions\ActionGroup;
+use App\Filament\Resources\SupplierResource\Pages;
+use App\Filament\Resources\SupplierResource\Pages\PurchaseSummary;
 
 class SupplierResource extends Resource
 {
@@ -47,7 +46,14 @@ class SupplierResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Action::make('purchase-summary')
+                        ->label('Purchase Summary')
+                        ->color('success')
+                        ->icon('heroicon-o-book-open')
+                        ->url(fn (Supplier $record):string => '/admin/suppliers/purchase-detail/'.$record['id']),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -67,6 +73,7 @@ class SupplierResource extends Resource
             'index' => Pages\ListSuppliers::route('/'),
             'create' => Pages\CreateSupplier::route('/create'),
             'edit' => Pages\EditSupplier::route('/{record}/edit'),
+            'purchase-summary' => PurchaseSummary::route('/purchase-detail/{record}')
         ];
     }    
 }

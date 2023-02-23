@@ -235,7 +235,7 @@ class PurchaseResource extends Resource
                                     ->update(['inventory' => $updated_inventory]);
                             }
 
-                    })  
+                    })
                     ->requiresConfirmation()
                     ->hidden(fn (Purchase $record):bool => $record['purchase_status'] == '2'),
                 ])
@@ -261,6 +261,7 @@ class PurchaseResource extends Resource
             'index' => Pages\ListPurchases::route('/'),
             'create' => Pages\CreatePurchase::route('/create'),
             'edit' => Pages\EditPurchase::route('/{record}/edit'),
+            'purchase-detail' => Pages\PurchaseDetail::route('/purchase-detail/{record}'),
         ];
     }    
 }
