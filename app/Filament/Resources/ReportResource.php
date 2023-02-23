@@ -48,7 +48,7 @@ class ReportResource extends Resource
                         ->url('reports/sales-report'),
                     
                     Action::make('popular-product-list')
-                        ->label('Top Selling Products')
+                        ->label('Products Selling Summary')
                         ->color('success')
                         ->icon('heroicon-o-book-open')
                         ->url('/admin/reports/popular-product-list'),
