@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\CategoryResource\Pages;
 
+use Filament\Resources\Table;
 use Filament\Resources\Pages\Page;
 use Illuminate\Support\Facades\DB;
 use App\Filament\Resources\CategoryResource;
