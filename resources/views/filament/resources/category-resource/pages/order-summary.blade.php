@@ -39,9 +39,9 @@ else $noDataDisplay = '';
 
 
 <div class="pagination">
-@for($currentPage = 1 ; $currentPage <= $totalPageCount ; $currentPage++)
-<a class='<?php echo $page==$currentPage ? "active" : "" ?>' href="{{url('/admin/categories/order-detail/'.$catID.'?p='.$currentPage)}}">{{$currentPage}}</a>
-@endfor
+    @for($currentPage = 1 ; $currentPage <= $totalPageCount ; $currentPage++)
+    <a class='<?php echo $page==$currentPage ? "active" : "" ?>' href="{{url('/admin/categories/order-detail/'.$catID.'?p='.$currentPage)}}">{{$currentPage}}</a>
+    @endfor
 </div>
 
 </x-filament::page>

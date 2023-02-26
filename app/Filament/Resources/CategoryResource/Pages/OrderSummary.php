@@ -10,14 +10,15 @@ class OrderSummary extends Page
 {
     protected static string $resource = CategoryResource::class;
     public $OrderSummary;
-    public $categoryDetail;
     public $catID;
+
     public $totalPageCount;
     public $page;
 
     public function mount()
     {
         $this->catID = request('record');
+        
         $perPageRecord = 5;
         request('p') == null ? $this->page = 1 : $this->page = request('p'); 
         $pageRecordStart = ($this->page-1)*$perPageRecord;
