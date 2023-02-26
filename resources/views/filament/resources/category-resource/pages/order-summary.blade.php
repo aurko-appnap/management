@@ -36,4 +36,12 @@ if(count($OrderSummary)>0) $noDataDisplay = 'none';
 else $noDataDisplay = '';
 ?>
 <div class="no_data_text" style="display: {{$noDataDisplay}};">No Data Available!</div>
+
+
+<div class="pagination">
+@for($currentPage = 1 ; $currentPage <= $totalPageCount ; $currentPage++)
+<a class='<?php echo $page==$currentPage ? "active" : "" ?>' href="{{url('/admin/categories/order-detail/'.$catID.'?p='.$currentPage)}}">{{$currentPage}}</a>
+@endfor
+</div>
+
 </x-filament::page>
