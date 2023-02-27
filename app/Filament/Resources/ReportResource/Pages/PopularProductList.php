@@ -18,9 +18,12 @@ class PopularProductList extends Page
     public function mount()
     {
         $topPerPageRecord = 5;
+        $zeroPerPageRecord = 5;
+
         request('topSellPage') == null ? $this->topPage = 1 : $this->topPage = request('topSellPage'); 
         request('zeroSellPage') == null ? $this->zeroPage = 1 : $this->zeroPage = request('zeroSellPage'); 
 
+// TOP START
         $topPageRecordStart = ($this->topPage-1)*$topPerPageRecord;
 
         $popularProductListRecord = DB::table('order_items')
@@ -40,10 +43,9 @@ class PopularProductList extends Page
                     ->limit($topPerPageRecord)
                     ->offset($topPageRecordStart)
                     ->get();
+// TOP END        
 
-
-        $zeroPerPageRecord = 5;
-        
+// ZERO START
         $zeroPageRecordStart = ($this->zeroPage-1)*$zeroPerPageRecord;
 
         $zeroSellingProductsRecord = DB::table('products')
@@ -64,8 +66,8 @@ class PopularProductList extends Page
                     ->limit($zeroPerPageRecord)
                     ->offset($zeroPageRecordStart)
                     ->get();
+// ZERO END
 
-        // dd($this->zeroSellingProducts);
-    }
+}
     protected static string $view = 'filament.resources.report-resource.pages.popular-product-list';
 }
