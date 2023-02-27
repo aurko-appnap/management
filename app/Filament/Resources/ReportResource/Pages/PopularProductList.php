@@ -62,7 +62,7 @@ class PopularProductList extends Page
                            ->from('order_items');
                     })
                     ->limit($zeroPerPageRecord)
-                    ->offset($zeroPerPageRecord)
+                    ->offset($zeroPageRecordStart)
                     ->get();
 
         // dd($this->zeroSellingProducts);

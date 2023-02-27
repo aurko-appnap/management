@@ -70,8 +70,8 @@ else $noDataDisplay1 = '';
             <caption class="py-4">Zero Selling Products</caption>
             <thead class="bg-gray-500/5">
                 <td class="filament-tables-checkbox-cell w-4 px-4">Serial</td>
-                <td class="filament-tables-header-cell p-2">Product Name</td>
-                <td class="filament-tables-header-cell p-2">Product Price</td>
+                <td class="filament-tables-header-cell w-4 p-2">Product Name</td>
+                <td class="filament-tables-header-cell w-4 p-2">Product Price</td>
             </thead>
             <tbody class="divide-y whitespace-nowrap dark:divide-gray-700">
                 @foreach ($zeroSellingProducts as $key => $product)
