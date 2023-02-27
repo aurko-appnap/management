@@ -140,8 +140,6 @@
 <div class="summary_section">
     Total Refund from Suppliers:  ৳ {{$totalSupplierDebit}}
 </div>
-
-<div class="html2pdf__page-break"></div>
 <br>
 <!-- CUSTOMER DEBIT || PAYMENT FROM CUSTOMERS-->
 
