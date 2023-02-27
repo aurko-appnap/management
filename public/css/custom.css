@@ -1,19 +1,5 @@
-table{
-    width: 100%;
-    font-size: 18px;
-    margin-left: auto;
-    margin-right: auto;
-    border: 1px solid gray;
-}
-thead, tbody{
-    text-align: center;
-}
-th, td{
-    border: 1px solid gray;
-    padding: 3px 0px 3px 0px;
-}
 caption{
-    font-size: 25px;
+    font-size: 20px;
     text-transform: uppercase;
     margin-bottom: 5px;
     font-weight: bold;
@@ -33,8 +19,7 @@ canvas{
 }
 .no_data_text{
     text-align: center;
-    font-size: 25px;
-    font-weight: bold;
+    font-size: 20px;
     text-transform: lowercase;
 }
 
