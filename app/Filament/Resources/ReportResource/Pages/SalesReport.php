@@ -21,15 +21,44 @@ class SalesReport extends Page
 
     public $allPaymentByCustomer, $allPaymentToSupplier;
 
+    public $psTotalPageCount, $rsTotalPageCount, $pcTotalPageCount, $rcTotalPageCount;
+    public $psPage, $rsPage, $pcPage, $rcPage;
+
+
     public function mount()
     {
+        $psPerPageRecord = 5;
+        $rsPerPageRecord = 5;
+        $pcPerPageRecord = 5;
+        $rcPerPageRecord = 5;
+
+        request('psPage') == null ? $this->psPage = 1 : $this->psPage = request('psPage'); 
+        request('rsPage') == null ? $this->rsPage = 1 : $this->rsPage = request('rsPage'); 
+        request('pcPage') == null ? $this->pcPage = 1 : $this->pcPage = request('pcPage'); 
+        request('rcPage') == null ? $this->rcPage = 1 : $this->rcPage = request('rcPage'); 
 //----------------------------------------------------------------CUSTOMER DEBIT
+    
+        $psPageRecordStart = ($this->psPage-1)*$psPerPageRecord;
+        $allCustomerDebitRecord = DB::table('transactions')
+            ->join('customers' , 'customers.id' , '=' , 'transactions.entity_id')
+            ->join('orders' , 'orders.id' , '=' , 'transactions.trading_id')
+            ->select('transactions.*' , 'customers.name', 'orders.order_number')
+            ->where('transactions.entity_type' , 'customer')
+            ->where('transactions.transaction_type', 'debit')
+            ->get();
+        
+        $this->psTotalPageCount = (int)ceil(sizeof($allCustomerDebitRecord) / $psPerPageRecord);
+
+
+
         $this->allCustomerDebit = DB::table('transactions')
             ->join('customers' , 'customers.id' , '=' , 'transactions.entity_id')
             ->join('orders' , 'orders.id' , '=' , 'transactions.trading_id')
             ->select('transactions.*' , 'customers.name', 'orders.order_number')
             ->where('transactions.entity_type' , 'customer')
             ->where('transactions.transaction_type', 'debit')
+            ->limit($psPerPageRecord)
+            ->offset($psPageRecordStart)
             ->get();
         
         foreach($this->allCustomerDebit as $key => $sale)
@@ -39,6 +68,16 @@ class SalesReport extends Page
             }
 
 //----------------------------------------------------------------CUSTOMER CREDIT
+        $rsPageRecordStart = ($this->rsPage-1)*$rsPerPageRecord;
+        $allCustomerCreditRecord = DB::table('transactions')
+            ->join('customers' , 'customers.id' , '=' , 'transactions.entity_id')
+            ->join('orders' , 'orders.id' , '=' , 'transactions.trading_id')
+            ->select('transactions.*' , 'customers.name', 'orders.order_number')
+            ->where('transactions.entity_type' , 'customer')
+            ->where('transactions.transaction_type', 'credit')
+            ->get();
+        
+        $this->rsTotalPageCount = (int)ceil(sizeof($allCustomerCreditRecord) / $rsPerPageRecord);
 
         $this->allCustomerCredit = DB::table('transactions')
             ->join('customers' , 'customers.id' , '=' , 'transactions.entity_id')
@@ -46,6 +85,8 @@ class SalesReport extends Page
             ->select('transactions.*' , 'customers.name', 'orders.order_number')
             ->where('transactions.entity_type' , 'customer')
             ->where('transactions.transaction_type', 'credit')
+            ->limit($rsPerPageRecord)
+            ->offset($rsPageRecordStart)
             ->get();
 
         foreach($this->allCustomerCredit as $key => $refund)
@@ -54,6 +95,16 @@ class SalesReport extends Page
             }    
 
 //----------------------------------------------------------------SUPPLIER CREDIT
+        $pcPageRecordStart = ($this->pcPage-1)*$pcPerPageRecord;
+        $allSupplierCreditRecord = DB::table('transactions')
+            ->join('suppliers' , 'suppliers.id' , '=' , 'transactions.entity_id')
+            ->join('purchases' , 'purchases.id' , '=' , 'transactions.trading_id')
+            ->select('transactions.*' , 'suppliers.name', 'purchases.purchase_number')
+            ->where('transactions.entity_type' , 'supplier')
+            ->where('transactions.transaction_type', 'credit')
+            ->get();
+            
+            $this->pcTotalPageCount = (int)ceil(sizeof($allSupplierCreditRecord) / $pcPerPageRecord);
 
         $this->allSupplierCredit = DB::table('transactions')
             ->join('suppliers' , 'suppliers.id' , '=' , 'transactions.entity_id')
@@ -61,6 +112,8 @@ class SalesReport extends Page
             ->select('transactions.*' , 'suppliers.name', 'purchases.purchase_number')
             ->where('transactions.entity_type' , 'supplier')
             ->where('transactions.transaction_type', 'credit')
+            ->limit($pcPerPageRecord)
+            ->offset($pcPageRecordStart)
             ->get();
 
         foreach($this->allSupplierCredit as $key => $refund)
@@ -70,6 +123,16 @@ class SalesReport extends Page
             }
 
 //----------------------------------------------------------------SUPPLIER DEBIT
+        $rcPageRecordStart = ($this->rcPage-1)*$rcPerPageRecord;
+        $allSupplierDebitRecord = DB::table('transactions')
+            ->join('suppliers' , 'suppliers.id' , '=' , 'transactions.entity_id')
+            ->join('purchases' , 'purchases.id' , '=' , 'transactions.trading_id')
+            ->select('transactions.*' , 'suppliers.name', 'purchases.purchase_number')
+            ->where('transactions.entity_type' , 'supplier')
+            ->where('transactions.transaction_type', 'debit')
+            ->get();
+        $this->rcTotalPageCount = (int)ceil(sizeof($allSupplierDebitRecord) / $rcPerPageRecord);
+
 
         $this->allSupplierDebit = DB::table('transactions')
             ->join('suppliers' , 'suppliers.id' , '=' , 'transactions.entity_id')
@@ -77,6 +140,8 @@ class SalesReport extends Page
             ->select('transactions.*' , 'suppliers.name', 'purchases.purchase_number')
             ->where('transactions.entity_type' , 'supplier')
             ->where('transactions.transaction_type', 'debit')
+            ->limit($rcPerPageRecord)
+            ->offset($rcPageRecordStart)
             ->get();
 
         foreach($this->allSupplierDebit as $key => $refund)
