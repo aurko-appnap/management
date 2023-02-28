@@ -12,6 +12,7 @@ class OrderSummary extends Page
     protected static string $resource = BrandResource::class;
     public $OrderSummary;
     public $brandID;
+    public $totalOrderCount;
 
     public $totalPageCount;
     public $page;
@@ -59,6 +60,11 @@ class OrderSummary extends Page
             ->limit($perPageRecord)
             ->offset($pageRecordStart)
             ->get();
+            
+        if(request('from') != NULL)
+            $this->totalOrderCount = sizeof($this->OrderSummary);
+        else    
+            $this->totalOrderCount = sizeof($OrderSummaryRecord);
     }
     protected static string $view = 'filament.resources.brand-resource.pages.order-summary';
 }
