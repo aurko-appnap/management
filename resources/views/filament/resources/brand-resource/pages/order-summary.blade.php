@@ -1,6 +1,13 @@
 <x-filament::page>
     <link rel="stylesheet" href="{{asset('css/pagination.css')}}">
     <link rel="stylesheet" href="{{asset('css/custom.css')}}">
+
+    <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/gh/alumuko/vanilla-datetimerange-picker@latest/dist/vanilla-datetimerange-picker.css">
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/gh/alumuko/vanilla-datetimerange-picker@latest/dist/vanilla-datetimerange-picker.js"></script>
+
+    <input type="text" id="datetimerange-input1" size="24" style="text-align:center">
+
 <div class="border border-gray-300 shadow-sm bg-white rounded-xl filament-tables-container dark:bg-gray-800 dark:border-gray-700">
     <div class="filament-tables-table-container overflow-x-auto relative dark:border-gray-700 rounded-t-xl">
         <table class="filament-tables-table w-full text-start divide-y table-auto dark:divide-gray-700">
@@ -70,6 +77,37 @@ else $noDataDisplay = '';
 ?>
 <div class="no_data_text" style="display: {{$noDataDisplay}};">No Data Available!</div>
 
-
+<script>
+    window.addEventListener("load", function (event) {
+        var startDate, endDate;
+        new DateRangePicker('datetimerange-input1',
+            {
+                showWeekNumbers : true,
+                timePicker24Hour : false,
+                timePicker: true,
+                opens: 'down',
+                ranges: {
+                    'Today': [moment().startOf('day'), moment().endOf('day')],
+                    'Yesterday': [moment().subtract(1, 'days').startOf('day'), moment().subtract(1, 'days').endOf('day')],
+                    'Last 7 Days': [moment().subtract(6, 'days').startOf('day'), moment().endOf('day')],
+                    'This Month': [moment().startOf('month').startOf('day'), moment().endOf('month').endOf('day')],
+                },
+                locale: {
+                    format: "DD/MM/YYYY HH:mm:ss",
+                    firstDay: 6,
+                    monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                }
+            },
+            function (start, end) {
+                // alert("<?php echo 'ok'; ?>");
+                startDate = start.format("DD/MM/YYYY");
+                endDate = end.format("DD/MM/YYYY");
+                var url = "<?php echo url('/admin/brands/order-detail/'.$brandID.'?from=') ?>"+startDate+"&to="+endDate;
+                window.location.href = url;
+                // alert(url);
+                // alert(start.format() + " - " + end.format());
+            })
+    });
+</script>
 
 </x-filament::page>

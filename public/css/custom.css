@@ -21,6 +21,7 @@ canvas{
     text-align: center;
     font-size: 20px;
     text-transform: lowercase;
+    color: rgb(195, 0, 0);
 }
 
 .general-button{
