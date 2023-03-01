@@ -243,7 +243,7 @@ class PurchaseResource extends Resource
                     ->label('Purchase Detail')
                     ->color('success')
                     ->icon('heroicon-o-book-open')
-                    ->url(fn (Purchase $record):string => '/admin/purchases/payment-summary/'.$record['id']),
+                    ->url(fn (Purchase $record):string => '/admin/purchases/purchase-detail/'.$record['id']),
                 
                 Action::make('payment-summary')
                     ->label('Payment Summary')
