@@ -18,6 +18,7 @@ class OrderSummary extends Page
     public $page;
 
     public $fromDate, $toDate;
+    public $numberOfProduct = 0;
 
     public function mount()
     {
@@ -33,6 +34,7 @@ class OrderSummary extends Page
             $this->toDate = Carbon::now();
             $perPageRecord = 5;
         }
+
         $this->brandID = request('record');
 
         
@@ -60,7 +62,20 @@ class OrderSummary extends Page
             ->limit($perPageRecord)
             ->offset($pageRecordStart)
             ->get();
-            
+
+        $individualProductCount = DB::table('order_items')
+            ->join('products' , 'products.id' , '=' , 'order_items.product_id')
+            ->join('orders' , 'orders.id' , '=' , 'order_items.order_id')
+            ->select('order_items.product_quantity')
+            ->where('products.brand_id' , $this->brandID)
+            ->whereDate('orders.order_placed_on' , '>=' , $this->fromDate)
+            ->whereDate('orders.order_placed_on' , '<=' , $this->toDate)
+            ->get();
+        foreach($individualProductCount as $key => $pCount)
+            $this->numberOfProduct = $this->numberOfProduct + $pCount->product_quantity;
+
+        // dd($this->numberOfProduct);
+
         if(request('from') != NULL)
             $this->totalOrderCount = sizeof($this->OrderSummary);
         else    

@@ -35,3 +35,12 @@ canvas{
 .pull-right{
     float: right !important;
 }
+
+.custom-widget-text{
+    font-size: 25px;
+    text-align: center;
+}
+
+.custom-widget-text span{
+    font-weight: bold;
+}

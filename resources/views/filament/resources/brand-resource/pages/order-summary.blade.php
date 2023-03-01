@@ -6,8 +6,25 @@
     <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/gh/alumuko/vanilla-datetimerange-picker@latest/dist/vanilla-datetimerange-picker.js"></script>
 
-    <input type="text" id="datetimerange-input1" size="24" style="text-align:center">
-{{$totalOrderCount}}
+<div class="filament-stats grid gap-4 lg:gap-8 md:grid-cols-3">
+    <input type="text" class="p-2 rounded-2xl bg-white shadow dark:bg-gray-800" id="datetimerange-input1" size="20" style="text-align:center">
+    <div class="filament-stats-card relative p-6 rounded-2xl bg-white shadow dark:bg-gray-800 filament-stats-overview-widget-card">
+        <div class="space-y-2">
+            <div class="custom-widget-text">
+                Total Order Count: <span class="custom-widget-count">{{$totalOrderCount}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="filament-stats-card relative p-6 rounded-2xl bg-white shadow dark:bg-gray-800 filament-stats-overview-widget-card">
+        <div class="space-y-2">
+            <div class="custom-widget-text">
+                Total Product Count: <span class="custom-widget-count">{{$numberOfProduct}}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="border border-gray-300 shadow-sm bg-white rounded-xl filament-tables-container dark:bg-gray-800 dark:border-gray-700">
     <div class="filament-tables-table-container overflow-x-auto relative dark:border-gray-700 rounded-t-xl">
         <table class="filament-tables-table w-full text-start divide-y table-auto dark:divide-gray-700">
