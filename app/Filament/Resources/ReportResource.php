@@ -12,6 +12,7 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ReportResource\Pages;
+use App\Filament\Resources\ReportResource\Pages\CustomerSummary;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ReportResource\RelationManagers;
 
@@ -75,6 +76,7 @@ class ReportResource extends Resource
             'edit' => Pages\EditReport::route('/{record}/edit'),
             'sales-report' => Pages\SalesReport::route('/sales-report'),
             'popular-product-list' => Pages\PopularProductList::route('/popular-product-list'),
+            'customer-summary' => CustomerSummary::route('/customer-summary'),
         ];
     }    
 }

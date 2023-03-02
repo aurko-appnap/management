@@ -6,7 +6,7 @@
     <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/gh/alumuko/vanilla-datetimerange-picker@latest/dist/vanilla-datetimerange-picker.js"></script>    
 
-    <div class="filament-stats grid gap-4 lg:gap-8 md:grid-cols-3">
+<div class="filament-stats grid gap-4 lg:gap-8 md:grid-cols-3">
     <input type="text" class="p-2 rounded-2xl bg-white shadow dark:bg-gray-800" id="datetimerange-input1" size="20" style="text-align:center">
     <div class="filament-stats-card relative p-6 rounded-2xl bg-white shadow dark:bg-gray-800 filament-stats-overview-widget-card">
         <div class="space-y-2">
