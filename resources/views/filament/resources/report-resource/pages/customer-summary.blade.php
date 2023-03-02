@@ -68,11 +68,13 @@
                     firstDay: 6,
                     monthNames: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
                 }
+                
             },
             function (start, end) {
                 // var dateValue = document.getElementById('datetimerange-input1');
                 // dateValue.value = start.format('DD/MM/YYYY');
             })
+            document.getElementById('datetimerange-input1').value = 'select date range';
     });
 
     var coll = document.getElementsByClassName("collapsible");
