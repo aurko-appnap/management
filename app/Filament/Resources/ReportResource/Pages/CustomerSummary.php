@@ -19,6 +19,8 @@ class CustomerSummary extends Page
     {
         $query = DB::table('customers')
             ->join('orders' , 'orders.customer_code' , '=' , 'customers.id')
+            ->join('order_items' , 'orders.id' , '=' , 'order_items.order_id')
+            ->join('products' , 'products.id' , '=' , 'order_items.product_id')
             ->select(DB::raw('count(orders.order_number) as order_count') , 'customers.name' , 'customers.id')
             ->groupBy('customers.name')
             ->orderBy('order_count' , 'desc');
@@ -27,6 +29,7 @@ class CustomerSummary extends Page
         $saleType = request('sale');
         $amountComparison = request('spent');
         $amount = request('amount');
+        $productId = request('product_item');
         request('page') == null ? $this->page = 1 : $this->page = request('page'); 
         $pageRecordStart = ($this->page-1)*$this->perPageRecord;
 
@@ -51,7 +54,8 @@ class CustomerSummary extends Page
             else
                 $query->where('orders.total_price' , '=' , $amount);
         }
-
+        if($productId != NULL)
+            $query->where('products.id' , '=' , $productId);
         // dd($dates);
         // dd($query->get());
         // $this->totalPageCount = (int)ceil(sizeof($query->get()) / $this->perPageRecord);

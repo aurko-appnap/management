@@ -4,6 +4,11 @@
     <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/gh/alumuko/vanilla-datetimerange-picker@latest/dist/vanilla-datetimerange-picker.js"></script>  
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+    
+
     <button class="collapsible general-button">Filter</button>
     <div class="collapsibleContent">
         <form action="">
@@ -36,6 +41,16 @@
             <div class="form-input-group">
                 <label for="amount">Amount</label>
                 <input type="text" name="amount" placeholder="1225.00" class="rounded-2xl bg-white shadow dark:bg-gray-800">
+            </div>
+            <hr>
+            <div class="form-input-group">
+                <label for="item">Item</label>
+                <select id="item" type="text" class="livesearch p-3 rounded-2xl bg-white shadow dark:bg-gray-800" name="product_item">
+                    <option value="">All</option>
+                </select>
+                <!-- <select name="item" id="item" class="rounded-2xl bg-white shadow dark:bg-gray-800">
+                    
+                </select> -->
             </div>
 
             <div class="form-input-group">
@@ -141,7 +156,26 @@
         content.style.maxHeight = content.scrollHeight + "px";
         } 
     });
-    }
-    
+}
+
+$('.livesearch').select2({
+        placeholder: 'Select Item',
+        ajax: {
+            url: '/item-autocomplete-search',
+            dataType: 'json',
+            delay: 250,
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            text: item.name,
+                            id: item.id
+                        }
+                    })
+                };
+            },
+            cache: true
+        }
+    });
 </script>
 </x-filament::page>
