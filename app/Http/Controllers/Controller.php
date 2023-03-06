@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -24,5 +25,18 @@ class Controller extends BaseController
             		->get();
         }
         return response()->json($products);
+    }
+
+    function customer_search(Request $request)
+    {
+        $customers = [];
+
+        if($request->has('q')){
+            $search = $request->q;
+            $customers =Customer::select("id", "name")
+            		->where('name', 'LIKE', "%$search%")
+            		->get();
+        }
+        return response()->json($customers);
     }
 }

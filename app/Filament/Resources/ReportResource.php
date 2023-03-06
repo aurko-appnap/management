@@ -12,6 +12,8 @@ use Filament\Tables\Actions\Action;
 use Filament\Tables\Actions\ActionGroup;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ReportResource\Pages;
+use App\Filament\Resources\ReportResource\Pages\CustomerDetail;
+use App\Filament\Resources\ReportResource\Pages\CustomerList;
 use App\Filament\Resources\ReportResource\Pages\CustomerSummary;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ReportResource\RelationManagers;
@@ -54,11 +56,17 @@ class ReportResource extends Resource
                         ->icon('heroicon-o-book-open')
                         ->url('/admin/reports/popular-product-list'),
                     
-                    Action::make('popular-product-list')
+                    Action::make('customer-summary')
                         ->label('Customer Order Summary')
                         ->color('success')
                         ->icon('heroicon-o-book-open')
                         ->url('/admin/reports/customer-summary'),
+                    
+                    Action::make('customer-list')
+                        ->label('Customer Report')
+                        ->color('success')
+                        ->icon('heroicon-o-book-open')
+                        ->url('/admin/reports/customer-list'),
                 ])
             ])
             ->bulkActions([
@@ -82,6 +90,8 @@ class ReportResource extends Resource
             'sales-report' => Pages\SalesReport::route('/sales-report'),
             'popular-product-list' => Pages\PopularProductList::route('/popular-product-list'),
             'customer-summary' => CustomerSummary::route('/customer-summary'),
+            'customer-list' => CustomerList::route('/customer-list'),
+            'customer-detail' => CustomerDetail::route('/customer-detail'),
         ];
     }    
 }

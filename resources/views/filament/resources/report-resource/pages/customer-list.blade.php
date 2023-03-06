@@ -16,39 +16,14 @@
         </div>
         <hr>
         <div class="form-input-group">
-            <label for="saleType">Payment Type</label>
-            <select name="sale" id="saleType" class="rounded-2xl bg-white shadow dark:bg-gray-800">
-                <option value="">All</option>
-                <option value="0">Unpaid</option>
-                <option value="1">Partial Paid</option>
-                <option value="3">Full Paid</option>
-                <option value="2">Cancelled</option>
-            </select>
-        </div>
-        <hr>
-        <div class="form-input-group">
-            <label for="spentAmount">Total Spend</label>
-            <select name="spent" id="spentAmount" class="rounded-2xl bg-white shadow dark:bg-gray-800">
-                <option value="0">Any Amount</option>
-                <option value="1">More than</option>
-                <option value="2">Less Than</option>
-                <option value="3">Equal To</option>
-            </select>
-        </div>
-        <hr>
-        <div class="form-input-group">
-            <label for="amount">Amount</label>
-            <input type="text" name="amount" placeholder="1225.00" class="rounded-2xl bg-white shadow dark:bg-gray-800">
-        </div>
-        <hr>
-        <div class="form-input-group">
-            <label for="item">Item</label>
-            <select id="item" type="text" class="livesearch rounded-2xl bg-white shadow dark:bg-gray-800" name="product_item"></select>
+            <label for="item">Customer</label>
+            <select id="item" type="text" class="livesearch rounded-2xl bg-white shadow dark:bg-gray-800" name="customer"></select>
+            <input type="checkbox" name="all_customer" value="1"> All Customer
         </div>
 
         <div class="form-input-group">
             <button type="submit" class="general-button">Search</button>
-            <a href="{{url('/admin/reports/customer-summary')}}" class="white-button">Clear</a>
+            <a href="{{url('/admin/reports/customer-list')}}" class="white-button">Clear</a>
         </div>
     </form>  
 </div>
@@ -59,15 +34,15 @@
             <thead class="bg-gray-500/5">
                 <td class="filament-tables-checkbox-cell w-4 px-4">Serial</td>
                 <td class="filament-tables-header-cell p-2">Customer Name</td>
-                <td class="filament-tables-header-cell p-2">Order Count</td>
+                <td class="filament-tables-header-cell p-2">Customer Detail</td>
                 <td class="filament-tables-header-cell p-2">Order Detail</td>
             </thead>
             <tbody class="divide-y whitespace-nowrap dark:divide-gray-700">
-                @foreach ($CustomerSummary as $key => $result)
+                @foreach ($CustomerDetail as $key => $result)
                     <tr class="filament-tables-row transition hover:bg-gray-50 dark:hover:bg-gray-500/10">
                         <td class="filament-tables-cell dark:text-white filament-table-cell-id px-6 py-4">{{$key+1}}</td>
                         <td class="filament-tables-cell dark:text-white">{{$result->name}}</td>
-                        <td class="filament-tables-cell dark:text-white px-6">{{$result->order_count}}</td>
+                        <td class="filament-tables-actions-cell px-6 "><a href="{{url('/admin/reports/customer-detail?customer='.$result->id)}}" class="filament-link inline-flex items-center justify-center gap-0.5 font-medium hover:underline focus:outline-none focus:underline text-sm text-primary-600 hover:text-primary-500 dark:text-primary-500 dark:hover:text-primary-400 filament-tables-link-action">View</a></td>
                         <td class="filament-tables-actions-cell px-6 "><a href="{{url('/admin/customers/customer-order-summary/'.$result->id)}}" class="filament-link inline-flex items-center justify-center gap-0.5 font-medium hover:underline focus:outline-none focus:underline text-sm text-primary-600 hover:text-primary-500 dark:text-primary-500 dark:hover:text-primary-400 filament-tables-link-action">View</a></td>
                     </tr>
                 @endforeach
@@ -124,9 +99,9 @@
 }
 
 $('.livesearch').select2({
-        placeholder: 'Select Item',
+        placeholder: 'Select Customer',
         ajax: {
-            url: '/item-autocomplete-search',
+            url: '/customer-autocomplete-search',
             dataType: 'json',
             delay: 250,
             processResults: function (data) {

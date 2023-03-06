@@ -19,3 +19,4 @@ Route::get('/', function () {
 });
 
 Route::get('/item-autocomplete-search' , [Controller::class , 'product_search']);
+Route::get('/customer-autocomplete-search' , [Controller::class , 'customer_search']);
