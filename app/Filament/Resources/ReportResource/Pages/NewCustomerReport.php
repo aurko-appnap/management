@@ -12,7 +12,7 @@ class NewCustomerReport extends Page
     protected static string $resource = ReportResource::class;
     protected static ?string $title = 'New Customers Report';
     public $CustomerDetail;
-    public $customerCount;
+    public $customerCount = 0;
 
     function mount()
     {
@@ -20,17 +20,22 @@ class NewCustomerReport extends Page
         if($dates[0] != "DD/MM/YYYY" && $dates[0] != "")
         {
             $this->CustomerDetail = DB::table('customers')
+                ->selectRaw('COUNT(id) as customer_count, created_at')
                 ->whereDate('created_at' , '>=' , Carbon::createFromFormat('d/m/Y', $dates[0]))
                 ->whereDate('created_at' , '<=' , Carbon::createFromFormat('d/m/Y', $dates[1]))
-                ->orderBy('id' , 'DESC')
+                // ->groupBy('created_at')
                 ->get();
+                dd($this->CustomerDetail);
         }
         else
         {
             $this->CustomerDetail = [];
         }
-        $this->customerCount = sizeof($this->CustomerDetail);
-        // dd($dates);
+        foreach($this->CustomerDetail as $res)
+        {
+            $this->customerCount = $this->customerCount + $res->customer_count;
+        }
+        
     }
 
     protected static string $view = 'filament.resources.report-resource.pages.new-customer-report';

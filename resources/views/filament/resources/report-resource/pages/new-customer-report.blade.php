@@ -33,19 +33,15 @@
         <table class="filament-tables-table w-full text-start divide-y table-auto dark:divide-gray-700">
             <thead class="bg-gray-500/5">
                 <td class="filament-tables-checkbox-cell w-4 px-4">Serial</td>
-                <td class="filament-tables-header-cell p-2">Customer Name</td>  
-                <td class="filament-tables-header-cell p-2">Email</td>  
-                <td class="filament-tables-header-cell p-2">Phone Number</td>  
-                <td class="filament-tables-header-cell p-2">Registered On</td>  
+                <td class="filament-tables-header-cell p-2">Date</td>
+                <td class="filament-tables-header-cell p-2">Registered User Count</td>
             </thead>
             <tbody class="divide-y whitespace-nowrap dark:divide-gray-700">
                 @foreach ($CustomerDetail as $key => $result)
                     <tr class="filament-tables-row transition hover:bg-gray-50 dark:hover:bg-gray-500/10">
                         <td class="filament-tables-cell dark:text-white filament-table-cell-id px-6 py-4">{{$key+1}}</td>
-                        <td class="filament-tables-cell dark:text-white">{{$result->name}}</td>
-                        <td class="filament-tables-cell dark:text-white">{{$result->email}}</td>
-                        <td class="filament-tables-cell dark:text-white">{{$result->phone}}</td>
                         <td class="filament-tables-cell dark:text-white">{{date('d/m/Y' , strtotime($result->created_at))}}</td>
+                        <td class="filament-tables-cell dark:text-white">{{$result->customer_count}}</td>
                     </tr>
                 @endforeach
             </tbody>
