@@ -43,7 +43,17 @@
         <hr>
         <div class="form-input-group">
             <label for="item">Item</label>
-            <select id="item" type="text" class="livesearch rounded-2xl bg-white shadow dark:bg-gray-800" name="product_item"></select>
+            <select id="item" type="text" class="livesearch rounded-2xl bg-white shadow dark:bg-gray-800" name="product_item[]" multiple="multiple"></select>
+        </div>
+        <hr>
+        <div class="form-input-group">
+            <label for="category">Category</label>
+            <select id="category" type="text" class="categorySearch rounded-2xl bg-white shadow dark:bg-gray-800" name="category_item[]" multiple="multiple"></select>
+        </div>
+        <hr>
+        <div class="form-input-group">
+            <label for="customer">Customer</label>
+            <select id="customer" type="text" class="customerSearch rounded-2xl bg-white shadow dark:bg-gray-800" name="customer_item[]" multiple="multiple"></select>
         </div>
 
         <div class="form-input-group">
@@ -58,8 +68,11 @@
         <table class="filament-tables-table w-full text-start divide-y table-auto dark:divide-gray-700">
             <thead class="bg-gray-500/5">
                 <td class="filament-tables-checkbox-cell w-4 px-4">Serial</td>
-                <td class="filament-tables-header-cell p-2">Customer Name</td>
+                <td class="filament-tables-header-cell p-2">Name</td>
+                <td class="filament-tables-header-cell p-2">Email</td>
+                <td class="filament-tables-header-cell p-2">Phone</td>
                 <td class="filament-tables-header-cell p-2">Order Count</td>
+                <td class="filament-tables-header-cell p-2">Total Order Price</td>
                 <td class="filament-tables-header-cell p-2">Order Detail</td>
             </thead>
             <tbody class="divide-y whitespace-nowrap dark:divide-gray-700">
@@ -67,7 +80,10 @@
                     <tr class="filament-tables-row transition hover:bg-gray-50 dark:hover:bg-gray-500/10">
                         <td class="filament-tables-cell dark:text-white filament-table-cell-id px-6 py-4">{{$key+1}}</td>
                         <td class="filament-tables-cell dark:text-white">{{$result->name}}</td>
-                        <td class="filament-tables-cell dark:text-white px-6">{{$result->order_count}}</td>
+                        <td class="filament-tables-cell dark:text-white">{{$result->email}}</td>
+                        <td class="filament-tables-cell dark:text-white">{{$result->phone}}</td>
+                        <td class="filament-tables-cell dark:text-white px-3">{{$result->order_count}}</td>
+                        <td class="filament-tables-cell dark:text-white px-3">{{$result->total_order_price}}</td>
                         <td class="filament-tables-actions-cell px-6 "><a href="{{url('/admin/customers/customer-order-summary/'.$result->id)}}" class="filament-link inline-flex items-center justify-center gap-0.5 font-medium hover:underline focus:outline-none focus:underline text-sm text-primary-600 hover:text-primary-500 dark:text-primary-500 dark:hover:text-primary-400 filament-tables-link-action">View</a></td>
                     </tr>
                 @endforeach
@@ -123,24 +139,65 @@
     });
 }
 
+
 $('.livesearch').select2({
-        placeholder: 'Select Item',
-        ajax: {
-            url: '/item-autocomplete-search',
-            dataType: 'json',
-            delay: 250,
-            processResults: function (data) {
-                return {
-                    results: $.map(data, function (item) {
-                        return {
-                            text: item.name,
-                            id: item.id
-                        }
-                    })
-                };
-            },
-            cache: true
-        }
-    });
+    placeholder: 'Select Product',
+    ajax: {
+        url: '/item-autocomplete-search',
+        dataType: 'json',
+        delay: 250,
+        processResults: function (data) {
+            return {
+                results: $.map(data, function (item) {
+                    return {
+                        text: item.name,
+                        id: item.id
+                    }
+                })
+            };
+        },
+        cache: true
+    }
+});
+
+$('.categorySearch').select2({
+    placeholder: 'Select Category',
+    ajax: {
+        url: '/category-autocomplete-search',
+        dataType: 'json',
+        delay: 250,
+        processResults: function (data) {
+            return {
+                results: $.map(data, function (item) {
+                    return {
+                        text: item.name,
+                        id: item.id
+                    }
+                })
+            };
+        },
+        cache: true
+    }
+});
+
+$('.customerSearch').select2({
+    placeholder: 'Select Customer',
+    ajax: {
+        url: '/customer-autocomplete-search',
+        dataType: 'json',
+        delay: 250,
+        processResults: function (data) {
+            return {
+                results: $.map(data, function (item) {
+                    return {
+                        text: item.name,
+                        id: item.id
+                    }
+                })
+            };
+        },
+        cache: true
+    }
+});
 </script>
 </x-filament::page>

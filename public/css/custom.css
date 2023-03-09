@@ -85,7 +85,7 @@ canvas{
     margin-bottom: 10px;
 }
 
-.livesearch
+.livesearch, .categorySearch, .customerSearch
 {
-    width: 200px;
+    width: 700px;
 }

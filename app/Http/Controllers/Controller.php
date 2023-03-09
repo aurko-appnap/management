@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -25,6 +26,19 @@ class Controller extends BaseController
             		->get();
         }
         return response()->json($products);
+    }
+
+    function category_search(Request $request)
+    {
+        $category = [];
+
+        if($request->has('q')){
+            $search = $request->q;
+            $category =Category::select("id", "name")
+            		->where('name', 'LIKE', "%$search%")
+            		->get();
+        }
+        return response()->json($category);
     }
 
     function customer_search(Request $request)

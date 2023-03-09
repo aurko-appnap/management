@@ -17,7 +17,7 @@
         <hr>
         <div class="form-input-group">
             <label for="item">Customer</label>
-            <select id="item" type="text" class="livesearch rounded-2xl bg-white shadow dark:bg-gray-800" name="customer"></select>
+            <select id="item" type="text" class="livesearch rounded-2xl bg-white shadow dark:bg-gray-800" name="customer[]" multiple="multiple"></select>
             <input type="checkbox" name="all_customer" value="1"> All Customer
         </div>
 
@@ -34,6 +34,10 @@
             <thead class="bg-gray-500/5">
                 <td class="filament-tables-checkbox-cell w-4 px-4">Serial</td>
                 <td class="filament-tables-header-cell p-2">Customer Name</td>
+                <td class="filament-tables-header-cell p-2">Order Number</td>
+                <td class="filament-tables-header-cell p-2">Order Status</td>
+                <td class="filament-tables-header-cell p-2">Order Placed On</td>
+                <td class="filament-tables-header-cell p-2">Order Price</td>
                 <td class="filament-tables-header-cell p-2">Customer Detail</td>
                 <td class="filament-tables-header-cell p-2">Order Detail</td>
             </thead>
@@ -42,6 +46,10 @@
                     <tr class="filament-tables-row transition hover:bg-gray-50 dark:hover:bg-gray-500/10">
                         <td class="filament-tables-cell dark:text-white filament-table-cell-id px-6 py-4">{{$key+1}}</td>
                         <td class="filament-tables-cell dark:text-white">{{$result->name}}</td>
+                        <td class="filament-tables-cell dark:text-white">{{$result->order_number}}</td>
+                        <td class="filament-tables-cell dark:text-white">{{$result->order_status}}</td>
+                        <td class="filament-tables-cell dark:text-white">{{date('d/m/Y' , strtotime($result->order_placed_on))}}</td>
+                        <td class="filament-tables-cell dark:text-white">{{$result->total_price}}</td>
                         <td class="filament-tables-actions-cell px-6 "><a href="{{url('/admin/reports/customer-detail?customer='.$result->id)}}" class="filament-link inline-flex items-center justify-center gap-0.5 font-medium hover:underline focus:outline-none focus:underline text-sm text-primary-600 hover:text-primary-500 dark:text-primary-500 dark:hover:text-primary-400 filament-tables-link-action">View</a></td>
                         <td class="filament-tables-actions-cell px-6 "><a href="{{url('/admin/customers/customer-order-summary/'.$result->id)}}" class="filament-link inline-flex items-center justify-center gap-0.5 font-medium hover:underline focus:outline-none focus:underline text-sm text-primary-600 hover:text-primary-500 dark:text-primary-500 dark:hover:text-primary-400 filament-tables-link-action">View</a></td>
                     </tr>
@@ -99,23 +107,23 @@
 }
 
 $('.livesearch').select2({
-        placeholder: 'Select Customer',
-        ajax: {
-            url: '/customer-autocomplete-search',
-            dataType: 'json',
-            delay: 250,
-            processResults: function (data) {
-                return {
-                    results: $.map(data, function (item) {
-                        return {
-                            text: item.name,
-                            id: item.id
-                        }
-                    })
-                };
-            },
-            cache: true
-        }
-    });
+    placeholder: 'Select Customer',
+    ajax: {
+        url: '/customer-autocomplete-search',
+        dataType: 'json',
+        delay: 250,
+        processResults: function (data) {
+            return {
+                results: $.map(data, function (item) {
+                    return {
+                        text: item.name,
+                        id: item.id
+                    }
+                })
+            };
+        },
+        cache: true
+    }
+});
 </script>
 </x-filament::page>

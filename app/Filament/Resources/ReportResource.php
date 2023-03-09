@@ -57,13 +57,13 @@ class ReportResource extends Resource
                         ->url('/admin/reports/popular-product-list'),
                     
                     Action::make('customer-summary')
-                        ->label('Customer Order Summary')
+                        ->label('Customers Summary Report')
                         ->color('success')
                         ->icon('heroicon-o-book-open')
                         ->url('/admin/reports/customer-summary'),
                     
                     Action::make('customer-list')
-                        ->label('Customer Report')
+                        ->label('Detailed Customers Report')
                         ->color('success')
                         ->icon('heroicon-o-book-open')
                         ->url('/admin/reports/customer-list'),

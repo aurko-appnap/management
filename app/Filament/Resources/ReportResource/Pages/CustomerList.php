@@ -17,11 +17,20 @@ class CustomerList extends Page
         $dates = explode(' - ', request('dateRange'));
         $customerId = request('customer');
         $allCustomer = request('all_customer');
-
+        // dd($customerId);
         if($dates[0]!="" || $customerId || $allCustomer)
         {
             $query = DB::table('customers')
-                ->select('name' , 'id');
+                ->join('orders' , 'orders.customer_code' , '=' , 'customers.id')
+                ->join('order_items' , 'orders.id' , '=' , 'order_items.order_id')
+                ->select(
+                        // DB::raw('SUM(order_items.product_quantity) as total_product_quantity'),
+                        'customers.name', 
+                        'customers.id',
+                        'orders.order_number',
+                        'orders.order_placed_on',
+                        'orders.total_price',
+                        'orders.order_status',);
         
             if($dates[0] == "DD/MM/YYYY" || $dates[0] == "") 
             {
@@ -30,16 +39,19 @@ class CustomerList extends Page
     
             if($dates[0] != "DD/MM/YYYY" && $dates[0] != "")
             {
-                $query->whereDate('created_at' , '>=' , Carbon::createFromFormat('d/m/Y', $dates[0]));
-                $query->whereDate('created_at' , '<=' , Carbon::createFromFormat('d/m/Y', $dates[1]));
+                $query->whereDate('customers.created_at' , '>=' , Carbon::createFromFormat('d/m/Y', $dates[0]));
+                $query->whereDate('customers.created_at' , '<=' , Carbon::createFromFormat('d/m/Y', $dates[1]));
             }
             
             if($allCustomer)
             {
                 
             }
-            else if($customerId > 0)
-                $query->where('id' , $customerId);
+            else if($customerId != NULL)
+                foreach($customerId as $id)
+                {
+                    $query->orWhere('customers.id', '=' , $id);
+                }
             else
             {
     
