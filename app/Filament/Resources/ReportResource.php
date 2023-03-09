@@ -15,6 +15,7 @@ use App\Filament\Resources\ReportResource\Pages;
 use App\Filament\Resources\ReportResource\Pages\CustomerDetail;
 use App\Filament\Resources\ReportResource\Pages\CustomerList;
 use App\Filament\Resources\ReportResource\Pages\CustomerSummary;
+use App\Filament\Resources\ReportResource\Pages\NewCustomerReport;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ReportResource\RelationManagers;
 
@@ -67,6 +68,12 @@ class ReportResource extends Resource
                         ->color('success')
                         ->icon('heroicon-o-book-open')
                         ->url('/admin/reports/customer-list'),
+                    
+                    Action::make('new-customer-report')
+                        ->label('New Customer Report')
+                        ->color('success')
+                        ->icon('heroicon-o-book-open')
+                        ->url('/admin/reports/new-customer-report'),
                 ])
             ])
             ->bulkActions([
@@ -92,6 +99,7 @@ class ReportResource extends Resource
             'customer-summary' => CustomerSummary::route('/customer-summary'),
             'customer-list' => CustomerList::route('/customer-list'),
             'customer-detail' => CustomerDetail::route('/customer-detail'),
+            'new-customer-report' => NewCustomerReport::route('/new-customer-report'),
         ];
     }    
 }

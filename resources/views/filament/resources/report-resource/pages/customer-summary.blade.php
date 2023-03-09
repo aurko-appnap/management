@@ -92,7 +92,11 @@
     </div>
 </div>
 
-
+<?php
+if(count($CustomerSummary)>0) $noDataDisplay = 'none';
+else $noDataDisplay = '';
+?>
+<div class="no_data_text" style="display: {{$noDataDisplay}};">No Data Available!</div>
 
 <script>
     window.addEventListener("load", function (event) {

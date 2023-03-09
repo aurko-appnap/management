@@ -10,6 +10,8 @@ use App\Filament\Resources\ReportResource;
 class CustomerSummary extends Page
 {
     protected static string $resource = ReportResource::class;
+    protected static ?string $title = 'Customers Summary Report';
+
     public $CustomerSummary;
     
     public $page;

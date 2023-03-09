@@ -10,6 +10,7 @@ use App\Filament\Resources\ReportResource;
 class CustomerList extends Page
 {
     protected static string $resource = ReportResource::class;
+    protected static ?string $title = 'Detailed Customers Report';
     public $CustomerDetail;
 
     function mount()
