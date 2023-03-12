@@ -10,25 +10,29 @@
 <button class="collapsible general-button">Filter</button>
 <div class="collapsibleContent">
     <form action="">
-        <div class="form-input-group">
+        <div class="formGroup">
             <label for="datetimerange-input1">Date Range</label>
-            <input type="text" name="dateRange" class="rounded-2xl bg-white shadow dark:bg-gray-800" id="datetimerange-input1" size="20" style="text-align:center">
+            <input type="text" name="dateRange" class="collapseInput bg-white shadow dark:bg-gray-800" id="datetimerange-input1" size="20" style="text-align:center">
         </div>
         <hr>
-        <div class="form-input-group">
+        <div class="formGroup">
             <label for="item">Customer</label>
-            <select id="item" type="text" class="livesearch rounded-2xl bg-white shadow dark:bg-gray-800" name="customer[]" multiple="multiple"></select>
+            <select id="item" type="text" class="collapseInput livesearch bg-white shadow dark:bg-gray-800" name="customer[]" multiple="multiple"></select>
             <input type="checkbox" name="all_customer" value="1"> All Customer
         </div>
 
-        <div class="form-input-group">
-            <button type="submit" class="general-button">Search</button>
+        <div class="formGroup pull-right">
             <a href="{{url('/admin/reports/customer-list')}}" class="white-button">Clear</a>
+            <button type="submit" class="general-button">Search</button>
         </div>
     </form>  
 </div>
+<?php
+if(count($CustomerDetail)>0) $noDataDisplay = '';
+else $noDataDisplay = 'none';
+?>
 
-<div class="border border-gray-300 shadow-sm bg-white rounded-xl filament-tables-container dark:bg-gray-800 dark:border-gray-700">
+<div style="display: {{$noDataDisplay}};" class="border border-gray-300 shadow-sm bg-white rounded-xl filament-tables-container dark:bg-gray-800 dark:border-gray-700">
     <div class="filament-tables-table-container overflow-x-auto relative dark:border-gray-700 rounded-t-xl">
         <table class="filament-tables-table w-full text-start divide-y table-auto dark:divide-gray-700">
             <thead class="bg-gray-500/5">
@@ -58,12 +62,6 @@
         </table>
     </div>
 </div>
-
-<?php
-if(count($CustomerDetail)>0) $noDataDisplay = 'none';
-else $noDataDisplay = '';
-?>
-<div class="no_data_text" style="display: {{$noDataDisplay}};">No Data Available!</div>
 
 <script>
     window.addEventListener("load", function (event) {

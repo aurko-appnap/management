@@ -9,15 +9,15 @@
     
 <button class="collapsible general-button">Filter</button>
 <div class="collapsibleContent">
-    <form action="">
-        <div class="form-input-group">
-            <label for="datetimerange-input1">Date Range</label>
-            <input type="text" name="dateRange" class="rounded-2xl bg-white shadow dark:bg-gray-800" id="datetimerange-input1" size="20" style="text-align:center">
+    <form class="collaplseForm" action="">
+        <div class="formGroup">
+            <label class="collaplselabel" for="datetimerange-input1">Date Range</label>
+            <input type="text" name="dateRange" class="collapseInput bg-white shadow dark:bg-gray-800" id="datetimerange-input1" size="20" style="text-align:center">
         </div>
-        <hr>
-        <div class="form-input-group">
-            <label for="saleType">Payment Type</label>
-            <select name="sale" id="saleType" class="rounded-2xl bg-white shadow dark:bg-gray-800">
+        
+        <div class="formGroup">
+            <label class="collaplselabel" for="saleType">Payment Type</label>
+            <select name="sale" id="saleType" class="collapseInput bg-white shadow dark:bg-gray-800">
                 <option value="">All</option>
                 <option value="0">Unpaid</option>
                 <option value="1">Partial Paid</option>
@@ -25,45 +25,52 @@
                 <option value="2">Cancelled</option>
             </select>
         </div>
-        <hr>
-        <div class="form-input-group">
-            <label for="spentAmount">Total Spend</label>
-            <select name="spent" id="spentAmount" class="rounded-2xl bg-white shadow dark:bg-gray-800">
+        
+        <div class="formGroup">
+            <label class="collaplselabel" for="spentAmount">Total Spend</label>
+            <select name="spent" id="spentAmount" class="collapseInput bg-white shadow dark:bg-gray-800">
                 <option value="0">Any Amount</option>
                 <option value="1">More than</option>
                 <option value="2">Less Than</option>
                 <option value="3">Equal To</option>
             </select>
         </div>
-        <hr>
-        <div class="form-input-group">
-            <label for="amount">Amount</label>
-            <input type="text" name="amount" placeholder="1225.00" class="rounded-2xl bg-white shadow dark:bg-gray-800">
+        
+        <div class="formGroup">
+            <label class="collaplselabel" for="amount">Amount</label>
+            <input type="text" name="amount" placeholder="1225.00" class="collapseInput bg-white shadow dark:bg-gray-800">
         </div>
-        <hr>
-        <div class="form-input-group">
-            <label for="item">Item</label>
-            <select id="item" type="text" class="livesearch rounded-2xl bg-white shadow dark:bg-gray-800" name="product_item[]" multiple="multiple"></select>
+        
+        <div class="formGroup">
+            <label class="collaplselabel" for="item">Item</label>
+            <select id="item" type="text" class="livesearch collapseInput bg-white shadow dark:bg-gray-800" name="product_item[]" multiple="multiple"></select>
         </div>
-        <hr>
-        <div class="form-input-group">
-            <label for="category">Category</label>
-            <select id="category" type="text" class="categorySearch rounded-2xl bg-white shadow dark:bg-gray-800" name="category_item[]" multiple="multiple"></select>
+        
+        <div class="formGroup">
+            <label class="collaplselabel" for="category">Category</label>
+            <select id="category" type="text" class="categorySearch collapseInput bg-white shadow dark:bg-gray-800" name="category_item[]" multiple="multiple"></select>
         </div>
-        <hr>
-        <div class="form-input-group">
-            <label for="customer">Customer</label>
-            <select id="customer" type="text" class="customerSearch rounded-2xl bg-white shadow dark:bg-gray-800" name="customer_item[]" multiple="multiple"></select>
+        
+        <div class="formGroup">
+            <label class="collaplselabel" for="customer">Customer</label>
+            <select id="customer" type="text" class="customerSearch collapseInput bg-white shadow dark:bg-gray-800" name="customer_item[]" multiple="multiple"></select>
         </div>
 
-        <div class="form-input-group">
-            <button type="submit" class="general-button">Search</button>
+        <div class="formGroup pull-right">
             <a href="{{url('/admin/reports/customer-summary')}}" class="white-button">Clear</a>
+            <button type="submit" class="general-button">Submit</button>
         </div>
     </form>  
 </div>
 
-<div class="border border-gray-300 shadow-sm bg-white rounded-xl filament-tables-container dark:bg-gray-800 dark:border-gray-700">
+
+<?php
+if(count($CustomerSummary)>0) $noDataDisplay = '';
+else $noDataDisplay = 'none';
+?>
+
+
+<div style="display: {{$noDataDisplay}};" class="border border-gray-300 shadow-sm bg-white rounded-xl filament-tables-container dark:bg-gray-800 dark:border-gray-700">
     <div class="filament-tables-table-container overflow-x-auto relative dark:border-gray-700 rounded-t-xl">
         <table class="filament-tables-table w-full text-start divide-y table-auto dark:divide-gray-700">
             <thead class="bg-gray-500/5">
@@ -92,11 +99,6 @@
     </div>
 </div>
 
-<?php
-if(count($CustomerSummary)>0) $noDataDisplay = 'none';
-else $noDataDisplay = '';
-?>
-<div class="no_data_text" style="display: {{$noDataDisplay}};">No Data Available!</div>
 
 <script>
     window.addEventListener("load", function (event) {

@@ -60,7 +60,7 @@ canvas{
 .collapsible {
     color: white;
     cursor: pointer;
-    padding: 18px;
+    padding: 12px;
     width: 100%;
     border: none;
     text-align: left;
@@ -80,11 +80,26 @@ canvas{
     transition: max-height 0.2s ease-out;
     background-color: #f1f1f1;
 }
-.form-input-group
-{
+.formGroup{
     margin-bottom: 10px;
 }
-
+.formGroup label{
+    display: inline-block;
+    width: 200px;
+    text-align: left;
+}
+.collapseInput{
+    border-radius: 5px !important;
+    padding: 0.3rem 0.3rem !important;
+    color: gray;
+}
+.formGroup input[type="checkbox"]{
+    margin-left: 200px;
+    border-radius: 10px;
+}
+.formGroup select, .collapseInput{
+    width: 82%;
+}
 .livesearch, .categorySearch, .customerSearch
 {
     width: 700px;

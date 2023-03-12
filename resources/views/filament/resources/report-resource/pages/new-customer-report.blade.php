@@ -10,25 +10,30 @@
 <button class="collapsible general-button">Filter</button>
 <div class="collapsibleContent">
     <form action="">
-        <div class="form-input-group">
+        <div class="formGroup">
             <label for="datetimerange-input1">Date Range</label>
-            <input type="text" name="dateRange" class="rounded-2xl bg-white shadow dark:bg-gray-800" id="datetimerange-input1" size="20" style="text-align:center">
+            <input type="text" name="dateRange" class="collapseInput bg-white shadow dark:bg-gray-800" id="datetimerange-input1" size="20" style="text-align:center">
         </div>
-        <div class="form-input-group">
-            <button type="submit" class="general-button">Search</button>
+        <div class="formGroup pull-right">
             <a href="{{url('/admin/reports/new-customer-report')}}" class="white-button">Clear</a>
+            <button type="submit" class="general-button">Search</button>
         </div>
     </form>  
 </div>
 
-<div class="filament-stats-card relative p-6 rounded-2xl bg-white shadow dark:bg-gray-800 filament-stats-overview-widget-card">
+<?php
+if($resultCount>0) $noDataDisplay = '';
+else $noDataDisplay = 'none';
+?>
+
+<div style="display: {{$noDataDisplay}};" class="filament-stats-card relative p-6 rounded-2xl bg-white shadow dark:bg-gray-800 filament-stats-overview-widget-card">
     <div class="space-y-2">
         <div class="custom-widget-text">
             Total Customer Count: <span class="custom-widget-count">{{$totalRegisteredCustomer}}</span>
         </div>
     </div>
 </div>
-<div class="border border-gray-300 shadow-sm bg-white rounded-xl filament-tables-container dark:bg-gray-800 dark:border-gray-700">
+<div style="display: {{$noDataDisplay}};" class="border border-gray-300 shadow-sm bg-white rounded-xl filament-tables-container dark:bg-gray-800 dark:border-gray-700">
     <div class="filament-tables-table-container overflow-x-auto relative dark:border-gray-700 rounded-t-xl">
         <table class="filament-tables-table w-full text-start divide-y table-auto dark:divide-gray-700">
             <thead class="bg-gray-500/5">
@@ -39,7 +44,7 @@
             <tbody class="divide-y whitespace-nowrap dark:divide-gray-700">
                 @for($i = 0 ; $i < $resultCount ; $i++)
                     <tr class="filament-tables-row transition hover:bg-gray-50 dark:hover:bg-gray-500/10">
-                        <td class="filament-tables-cell dark:text-white filament-table-cell-id px-6 py-4">{{$i}}</td>
+                        <td class="filament-tables-cell dark:text-white filament-table-cell-id px-6 py-4">{{$i+1}}</td>
                         <td class="filament-tables-cell dark:text-white">{{$filterDates[$i]}}</td>
                         <td class="filament-tables-cell dark:text-white px-6">{{$registrationData[$i]}}</td>
                     </tr>
@@ -49,11 +54,6 @@
     </div>
 </div>
 
-<?php
-if($resultCount>0) $noDataDisplay = 'none';
-else $noDataDisplay = '';
-?>
-<div class="no_data_text" style="display: {{$noDataDisplay}};">No Data Available!</div>
 
 <script>
 window.addEventListener("load", function (event) {
