@@ -24,7 +24,7 @@
 <div class="filament-stats-card relative p-6 rounded-2xl bg-white shadow dark:bg-gray-800 filament-stats-overview-widget-card">
     <div class="space-y-2">
         <div class="custom-widget-text">
-            Total Customer Count: <span class="custom-widget-count">{{$customerCount}}</span>
+            Total Customer Count: <span class="custom-widget-count">{{$totalRegisteredCustomer}}</span>
         </div>
     </div>
 </div>
@@ -33,24 +33,24 @@
         <table class="filament-tables-table w-full text-start divide-y table-auto dark:divide-gray-700">
             <thead class="bg-gray-500/5">
                 <td class="filament-tables-checkbox-cell w-4 px-4">Serial</td>
-                <td class="filament-tables-header-cell p-2">Date</td>
-                <td class="filament-tables-header-cell p-2">Registered User Count</td>
+                <td class="filament-tables-header-cell w-4 p-2">Date</td>
+                <td class="filament-tables-header-cell w-4 p-2">Registered User Count</td>
             </thead>
             <tbody class="divide-y whitespace-nowrap dark:divide-gray-700">
-                @foreach ($CustomerDetail as $key => $result)
+                @for($i = 0 ; $i < $resultCount ; $i++)
                     <tr class="filament-tables-row transition hover:bg-gray-50 dark:hover:bg-gray-500/10">
-                        <td class="filament-tables-cell dark:text-white filament-table-cell-id px-6 py-4">{{$key+1}}</td>
-                        <td class="filament-tables-cell dark:text-white">{{date('d/m/Y' , strtotime($result->created_at))}}</td>
-                        <td class="filament-tables-cell dark:text-white">{{$result->customer_count}}</td>
+                        <td class="filament-tables-cell dark:text-white filament-table-cell-id px-6 py-4">{{$i}}</td>
+                        <td class="filament-tables-cell dark:text-white">{{$filterDates[$i]}}</td>
+                        <td class="filament-tables-cell dark:text-white px-6">{{$registrationData[$i]}}</td>
                     </tr>
-                @endforeach
+                @endfor
             </tbody>
         </table>
     </div>
 </div>
 
 <?php
-if(count($CustomerDetail)>0) $noDataDisplay = 'none';
+if($resultCount>0) $noDataDisplay = 'none';
 else $noDataDisplay = '';
 ?>
 <div class="no_data_text" style="display: {{$noDataDisplay}};">No Data Available!</div>
