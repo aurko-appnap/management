@@ -97,6 +97,41 @@ else $noDataDisplay = 'none';
             </tbody>
         </table>
     </div>
+    <div class="filament-tables-pagination-container p-2 border-t dark:border-gray-700">
+        <nav role="navigation" aria-label="Pagination Navigation" class="filament-tables-pagination flex items-center justify-between">
+            <div class="hidden flex-1 items-center lg:grid grid-cols-3">
+                <div class="flex items-center">
+                    <div class="pl-2 text-sm font-medium dark:text-white"></div>
+                </div>
+            <div class="flex items-center justify-center">
+                <div class="flex items-center space-x-2 filament-tables-pagination-records-per-page-selector rtl:space-x-reverse">
+                   
+                </div>
+            </div>
+            <div class="flex items-center justify-end">
+                <div class="py-3 border rounded-lg dark:border-gray-600">
+                    <ol class="flex items-center text-sm text-gray-500 divide-x rtl:divide-x-reverse divide-gray-300 dark:text-gray-400 dark:divide-gray-600">    
+                        @for($currentPage = 1 ; $currentPage <= $totalPageCount ; $currentPage++)
+                        <?php
+                            $temp = request()->input();
+                            unset($temp['page']);
+                        ?>
+                        <li>
+                                <a href="{{url()->current().'?'.http_build_query($temp ,'' , '&').'&page='.$currentPage}}">
+                                    <button type="button" 
+                                    class = "<?php echo $page==$currentPage ? 'filament-tables-pagination-item relative flex items-center justify-center font-medium min-w-[2rem] px-1.5 h-8 -my-3 rounded-md outline-none transition text-primary-600 focus:underline bg-primary-500/10 ring-2 ring-primary-500' : 'filament-tables-pagination-item relative flex items-center justify-center font-medium min-w-[2rem] px-1.5 h-8 -my-3 rounded-md outline-none hover:bg-gray-500/5 focus:bg-primary-500/10 focus:ring-2 focus:ring-primary-500 dark:hover:bg-gray-400/5 focus:text-primary-600 transition' ?>"
+                                    >
+                                        <span>{{$currentPage}}</span>
+                                    </button>
+                                </a>
+                            </li>
+                        @endfor
+                    </ol>
+                </div>
+            </div>
+            </div>
+        </nav>
+    </div>
 </div>
 
 

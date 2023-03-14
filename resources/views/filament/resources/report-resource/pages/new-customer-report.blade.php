@@ -82,7 +82,7 @@ window.addEventListener("load", function (event) {
             // var dateValue = document.getElementById('datetimerange-input1');
             // dateValue.value = start.format('DD/MM/YYYY');
         })
-        document.getElementById('datetimerange-input1').value = 'DD/MM/YYYY';
+        // document.getElementById('datetimerange-input1').value = 'DD/MM/YYYY';
 });
 
 var coll = document.getElementsByClassName("collapsible");

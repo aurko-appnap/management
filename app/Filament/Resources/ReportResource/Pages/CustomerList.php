@@ -13,11 +13,17 @@ class CustomerList extends Page
     protected static ?string $title = 'Detailed Customers Report';
     public $CustomerDetail;
 
+    public $totalPageCount;
+    public $perPageRecord = 5;
+    public $page;
+
     function mount()
     {
         $dates = explode(' - ', request('dateRange'));
         $customerId = request('customer');
         $allCustomer = request('all_customer');
+        request('page') == null ? $this->page = 1 : $this->page = request('page');
+        $pageRecordStart = ($this->page-1)*$this->perPageRecord; 
         // dd($customerId);
         if($dates[0]!="" || $customerId || $allCustomer)
         {
@@ -57,8 +63,13 @@ class CustomerList extends Page
             {
     
             }
-    
-            $this->CustomerDetail = $query->get();
+            $this->totalPageCount = (int)ceil(sizeof($query->get()) / $this->perPageRecord);
+            $this->CustomerDetail = $query
+                        ->limit($this->perPageRecord)
+                        ->offset($pageRecordStart)
+                        ->get();
+
+            // dd($this->totalPageCount);
         }
         else
         {

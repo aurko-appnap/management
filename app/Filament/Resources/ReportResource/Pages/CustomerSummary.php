@@ -16,7 +16,7 @@ class CustomerSummary extends Page
     
     public $page;
     public $totalPageCount;
-    public $perPageRecord = 2;
+    public $perPageRecord = 5;
     function mount()
     {
         $dates = explode(' - ', request('dateRange'));
@@ -101,7 +101,11 @@ class CustomerSummary extends Page
                 }
             }
 
-            $this->CustomerSummary = $query->get();
+            $this->totalPageCount = (int)ceil(sizeof($query->get()) / $this->perPageRecord);
+            $this->CustomerSummary = $query
+                        ->limit($this->perPageRecord)
+                        ->offset($pageRecordStart)
+                        ->get();
             // dd($this->CustomerSummary);
         }
         else
