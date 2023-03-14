@@ -50,19 +50,11 @@ class CustomerList extends Page
                 $query->whereDate('customers.created_at' , '<=' , Carbon::createFromFormat('d/m/Y', $dates[1]));
             }
             
-            if($allCustomer)
+            if($customerId != NULL)
             {
-                
-            }
-            else if($customerId != NULL)
-                foreach($customerId as $id)
-                {
-                    $query->orWhere('customers.id', '=' , $id);
-                }
-            else
-            {
-    
-            }
+                $query->whereIn('customers.id', $customerId);
+            } 
+            
             $this->totalPageCount = (int)ceil(sizeof($query->get()) / $this->perPageRecord);
             $this->CustomerDetail = $query
                         ->limit($this->perPageRecord)

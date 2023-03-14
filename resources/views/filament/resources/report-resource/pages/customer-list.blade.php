@@ -18,7 +18,6 @@
         <div class="formGroup">
             <label for="item">Customer</label>
             <select id="item" type="text" class="collapseInput livesearch bg-white shadow dark:bg-gray-800" name="customer[]" multiple="multiple"></select>
-            <input type="checkbox" name="all_customer" value="1"> All Customer
         </div>
 
         <div class="formGroup pull-right">
